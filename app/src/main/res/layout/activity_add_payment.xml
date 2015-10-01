@@ -1,0 +1,99 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp"
+    tools:context="com.example.lj.paymentmanagement.AddPaymentActivity"
+    android:background="#92ffdf"
+    android:onClick="addNewPaymentButtonClicked">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pay Account"
+        android:id="@+id/payAccountNameLabel"
+        android:textSize="20dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="20dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/payAccountNameInput"
+        android:width="200dp"
+        android:layout_alignTop="@+id/payAccountNameLabel"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add"
+        android:id="@+id/addNewPaymentButton"
+        android:onClick="addNewPaymentButtonClicked"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="104dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/paidAccountNameInput"
+        android:width="200dp"
+        android:layout_marginTop="41dp"
+        android:layout_below="@+id/payAccountNameInput"
+        android:layout_alignStart="@+id/payAccountNameInput" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/paidAccountNameLabel"
+        android:textSize="20dp"
+        android:layout_alignBaseline="@+id/paidAccountNameInput"
+        android:layout_alignBottom="@+id/paidAccountNameInput"
+        android:layout_alignParentStart="true"
+        android:text="Paid Account" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pay Amount"
+        android:id="@+id/payAmountLabel"
+        android:textSize="20dp"
+        android:layout_below="@+id/paidAccountNameInput"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="50dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:ems="10"
+        android:id="@+id/payAmountInput"
+        android:layout_alignBottom="@+id/payAmountLabel"
+        android:layout_alignStart="@+id/paidAccountNameInput"
+        android:layout_alignEnd="@+id/paidAccountNameInput" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pay Day"
+        android:id="@+id/payDateLabel"
+        android:textSize="20dp"
+        android:layout_above="@+id/addNewPaymentButton"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="43dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="date"
+        android:ems="10"
+        android:id="@+id/payDateInput"
+        android:layout_alignBottom="@+id/payDateLabel"
+        android:layout_alignParentEnd="true"
+        android:layout_alignStart="@+id/payAmountInput" />
+
+</RelativeLayout>
