@@ -8,6 +8,7 @@ import java.util.Date;
  */
 public class MyAccount {
 
+    public int _id;
     //name
     public String accountName;
     public String bankName;
@@ -15,28 +16,32 @@ public class MyAccount {
     //balance
     public Double statementBalance;
     public Double currentBalance;
-    public Double needToPayBalance;
+    public Double toPayBalance;
 
     //Date
-    public Date payDueDate;
+    public Integer dueDay;
     public Date statementDate;
 
     //
     public ArrayList<MyPaymentItem> paymentList = new ArrayList<MyPaymentItem>();
 
-    public MyAccount(String accountName, String bankName){
+    public MyAccount(){}
+
+    public MyAccount(String accountName, String bankName, Integer dueDay,
+                     Double toPayBalance){
         this.accountName = accountName;
         this.bankName = bankName;
+        this.dueDay = dueDay;
         this.statementBalance = 0.0;
         this.currentBalance = 0.0;
-        this.needToPayBalance = 0.0;
+        this.toPayBalance = 0.0;
     }
 
     public String toString(){
         return this.accountName + ", " + this.bankName + ", " +
                 this.statementBalance.toString() + ", "+
                 this.currentBalance.toString() + ", "+
-                this.needToPayBalance.toString();
+                this.toPayBalance.toString();
     }
 
 }

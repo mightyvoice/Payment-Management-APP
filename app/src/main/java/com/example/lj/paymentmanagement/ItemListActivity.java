@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 
@@ -31,6 +32,7 @@ public class ItemListActivity extends FragmentActivity
      * device.
      */
     private boolean mTwoPane;
+    MyData myData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,9 +53,14 @@ public class ItemListActivity extends FragmentActivity
                     .setActivateOnItemClick(true);
         }
 
-        //init all accounts and payment records. load all data to MyData.accountList
-        // and Mydata.paymentList
-        initAllData();
+        //init database
+//        this.deleteDatabase(myData.DATABASE_NAME);
+        myData = new MyData(this, null, null, 1);
+        myData.accountListAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, MyData.accountList);
+        myData.updateAccountListView();
+        myData.paymentListAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, MyData.paymentList);
     }
 
     /**
@@ -88,33 +95,28 @@ public class ItemListActivity extends FragmentActivity
         startActivityForResult(new Intent(this, AddAccountActivity.class), newAccountRequestCode);
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data){
-        if(requestCode == newAccountRequestCode){
-            if(resultCode == RESULT_OK){
-                Toast.makeText(this, data.getData().toString(), Toast.LENGTH_LONG).show();
-                MyData.accountList.add(data.getData().toString());
-                MyData.accountListAdapter.notifyDataSetChanged();
-            }
-        }
-
-        if(requestCode == newPaymentRequestCode){
-            if(resultCode == RESULT_OK){
-                Toast.makeText(this, data.getData().toString(), Toast.LENGTH_LONG).show();
-                MyData.paymentList.add(data.getData().toString());
-                MyData.paymentListAdapter.notifyDataSetChanged();
-            }
-        }
-    }
-
     private int newPaymentRequestCode = 2;
     public void addPaymentButtonClicked(View view){
         startActivityForResult(new Intent(this, AddPaymentActivity.class), newPaymentRequestCode);
     }
 
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        if(requestCode == newAccountRequestCode){
+            if(resultCode == RESULT_OK){
+                String tmp = data.getData().toString();
+                Toast.makeText(this, tmp, Toast.LENGTH_LONG).show();
+                myData.addAccountToDatabase(myData.getMyAccountFromString(tmp));
+            }
+        }
 
-    private void initAllData() {
-        MyData.accountList.clear();
-        MyData.paymentList.clear();
+        if(requestCode == newPaymentRequestCode){
+            if(resultCode == RESULT_OK){
+                String tmp = data.getData().toString();
+                Toast.makeText(this, tmp, Toast.LENGTH_LONG).show();
+                myData.addPaymentToDatabase(
+                        myData.getMyPaymentItemFromString(tmp));
+            }
+        }
     }
 
 }

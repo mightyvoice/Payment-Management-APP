@@ -79,16 +79,11 @@ public class ItemDetailFragment extends Fragment {
     }
 
     private void showAccounts(View rootView){
-        MyData.accountListAdapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_list_item_1, MyData.accountList);
-
         ListView accountListView = (ListView) rootView.findViewById(R.id.accountListView);
         accountListView.setAdapter(MyData.accountListAdapter);
     }
 
     private void showPayments(View rootView){
-        MyData.paymentListAdapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_list_item_1, MyData.paymentList);
         ListView paymentListView = (ListView) rootView.findViewById(R.id.paymentListView);
         paymentListView.setAdapter(MyData.paymentListAdapter);
     }

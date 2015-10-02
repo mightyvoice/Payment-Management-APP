@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.lj.paymentmanagement" >
 
+    <permission-group android:name="android.permission-group.MICROPHONE"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"

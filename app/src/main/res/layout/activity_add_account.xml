@@ -34,9 +34,8 @@
         android:text="Add"
         android:id="@+id/addNewAccountButton"
         android:onClick="addNewAccountButtonClicked"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="104dp" />
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
     <EditText
         android:layout_width="wrap_content"
