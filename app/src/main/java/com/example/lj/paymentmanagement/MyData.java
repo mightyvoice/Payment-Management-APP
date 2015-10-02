@@ -40,6 +40,7 @@ public class MyData extends SQLiteOpenHelper{
     public static final String COLUMN_PAYMENT_ID = "_id";
     public static final String COLUMN_PAY_ACCOUNT = "payAccount";
     public static final String COLUMN_PAID_ACCOUNT = "paidAccount";
+    public static final String COLUMN_PAY_AMOUNT = "payAmount";
 //    public static final String COLUMN_ACCOUNT_DUEDAY = "accountDueDay";
 //    public static final String COLUMN_ACCOUNT_TOPAY = "accountToPay";
 
@@ -65,7 +66,8 @@ public class MyData extends SQLiteOpenHelper{
         query = "CREATE TABLE " + TABLE_PAYMENTS + "(" +
                 COLUMN_ACCOUNT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_PAY_ACCOUNT + " TEXT, " +
-                COLUMN_PAID_ACCOUNT + " TEXT" +
+                COLUMN_PAID_ACCOUNT + " TEXT, " +
+                COLUMN_PAY_AMOUNT + " DOUBLE" +
                 ");";
         db.execSQL(query);
     }
@@ -90,15 +92,31 @@ public class MyData extends SQLiteOpenHelper{
         updateAccountListView();
     }
 
-    public void updateAccountToPay(String accountName, Double paidAmount){
-        ContentValues updatedValues =  new ContentValues();
+    public void updateAccountToPayBalance(String accountName, Double paidAmount){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM " + TABLE_ACCOUNTS + " WHERE " +
+                COLUMN_ACCOUNT_NAME + "=\"" + accountName +"\";";
+        Cursor cursor = db.rawQuery(query, null);
+        cursor.moveToFirst();
+        Double currentBalance = 0.0;
+        if(!cursor.isAfterLast() && cursor.getString(cursor.getColumnIndex(COLUMN_ACCOUNT_NAME))
+                != null){
+            currentBalance = cursor.getDouble(
+                    cursor.getColumnIndex(COLUMN_ACCOUNT_TOPAY));
+        }
+        Double newBalance = currentBalance - paidAmount;
+        query = "UPDATE "+TABLE_ACCOUNTS+" SET " +
+                COLUMN_ACCOUNT_TOPAY + "=" + newBalance.toString() +
+                " WHERE " + COLUMN_ACCOUNT_NAME + "=\"" + accountName+"\";";
+        db.execSQL(query);
+        db.close();
+        updateAccountListView();
     }
 
     public void updateAccountListView(){
         accountList.clear();
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT * FROM " + TABLE_ACCOUNTS + ";";
-
         Cursor cursor = db.rawQuery(query, null);
         cursor.moveToFirst();
         while(!cursor.isAfterLast()) {
@@ -124,6 +142,7 @@ public class MyData extends SQLiteOpenHelper{
         ContentValues values = new ContentValues();
         values.put(COLUMN_PAY_ACCOUNT, myPayment.payAccountName);
         values.put(COLUMN_PAID_ACCOUNT, myPayment.paidAccountName);
+        values.put(COLUMN_PAY_AMOUNT, myPayment.payAmount);
         SQLiteDatabase db = getWritableDatabase();
         db.insert(TABLE_PAYMENTS, null, values);
         db.close();
@@ -142,7 +161,9 @@ public class MyData extends SQLiteOpenHelper{
                 String tmp = cursor.getString(
                         cursor.getColumnIndex(COLUMN_PAY_ACCOUNT))+",";
                 tmp += cursor.getString(
-                        cursor.getColumnIndex(COLUMN_PAID_ACCOUNT))+",";
+                        cursor.getColumnIndex(COLUMN_PAID_ACCOUNT))+",    ";
+                tmp += cursor.getString(
+                        cursor.getColumnIndex(COLUMN_PAY_AMOUNT))+",";
                 paymentList.add(tmp);
             }
             cursor.moveToNext();
@@ -167,7 +188,7 @@ public class MyData extends SQLiteOpenHelper{
 
     public MyPaymentItem getMyPaymentItemFromString(String data){
         String[] l = data.split(",");
-        MyPaymentItem ans = new MyPaymentItem(l[0], l[1]);
+        MyPaymentItem ans = new MyPaymentItem(l[0], l[1], Double.parseDouble(l[2]));
         return ans;
     }
 

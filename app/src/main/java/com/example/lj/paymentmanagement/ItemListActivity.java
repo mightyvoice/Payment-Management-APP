@@ -61,6 +61,7 @@ public class ItemListActivity extends FragmentActivity
         myData.updateAccountListView();
         myData.paymentListAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, MyData.paymentList);
+        myData.updatePaymentListView();
     }
 
     /**
@@ -115,6 +116,10 @@ public class ItemListActivity extends FragmentActivity
                 Toast.makeText(this, tmp, Toast.LENGTH_LONG).show();
                 myData.addPaymentToDatabase(
                         myData.getMyPaymentItemFromString(tmp));
+
+                //update the toPayBalance of the account
+                String[] tmp1 = tmp.split(",");
+                myData.updateAccountToPayBalance(tmp1[0], Double.parseDouble(tmp1[2]));
             }
         }
     }

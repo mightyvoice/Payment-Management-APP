@@ -43,6 +43,9 @@ public class AddAccountActivity extends ActionBarActivity {
         newAccountBankInput = (EditText)findViewById(R.id.paidAccountNameInput);
         newAccountDueDayInput = (EditText)findViewById(R.id.newAccountDueDayInput);
 
+        newAccountNameInput.setText("Freedom");
+        newAccountBankInput.setText("BoA");
+
         String allInput = newAccountNameInput.getText().toString() + ",    " +
                 newAccountBankInput.getText().toString() + ",    " +
                 newAccountDueDayInput.getText().toString();

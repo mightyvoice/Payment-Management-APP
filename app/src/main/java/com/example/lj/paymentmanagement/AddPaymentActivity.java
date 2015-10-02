@@ -38,9 +38,15 @@ public class AddPaymentActivity extends ActionBarActivity {
         payAmountInput = (EditText)findViewById(R.id.payAmountInput);
         payDateInput = (EditText)findViewById(R.id.payDateInput);
 
-        payAccountNameInput.setText("freedom");
+        payAccountNameInput.setText("Freedom");
         paidAccountNameInput.setText("BoA");
-
+//        payAmountInput.setText("20");
+        String amount = payAmountInput.getText().toString();
+        try{
+            Double.parseDouble(amount);
+        }catch (Exception e){
+            payAmountInput.setText("20");
+        }
 
         String allInput = payAccountNameInput.getText().toString() + ",    " +
                 paidAccountNameInput.getText().toString() + ",    " +

@@ -15,10 +15,11 @@ public class MyPaymentItem {
     public boolean ifArrived;
     public Double totalPayAmountThisMonth;
 
-    public MyPaymentItem(String payAccountName, String paidAccountName){
+    public MyPaymentItem(String payAccountName, String paidAccountName,
+                         Double payAmount){
         this.payAccountName = payAccountName;
         this.paidAccountName = paidAccountName;
-        this.payAmount = 0.0;
+        this.payAmount = payAmount;
         this.totalPayAmountThisMonth = 0.0;
     }
 
