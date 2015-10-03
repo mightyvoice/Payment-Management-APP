@@ -9,18 +9,19 @@ import java.util.Date;
 public class MyPaymentItem {
     public String payAccountName;
     public String paidAccountName;
-    public Date payDate = new Date(Calendar.YEAR, Calendar.MONTH, Calendar.DATE);
+    public String payDate;
 
     public Double payAmount;
     public boolean ifArrived;
     public Double totalPayAmountThisMonth;
 
     public MyPaymentItem(String payAccountName, String paidAccountName,
-                         Double payAmount){
+                         Double payAmount, String payDate){
         this.payAccountName = payAccountName;
         this.paidAccountName = paidAccountName;
         this.payAmount = payAmount;
         this.totalPayAmountThisMonth = 0.0;
+        this.payDate = payDate;
     }
 
     public String toString(){

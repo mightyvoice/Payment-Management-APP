@@ -30,13 +30,16 @@ public class AddPaymentActivity extends ActionBarActivity {
         int height = ds.heightPixels;
 
         getWindow().setLayout((int) (width * 0.6), (int) (height * 0.7));
-    }
 
-    public void addNewPaymentButtonClicked(View view){
         payAccountNameInput = (EditText)findViewById(R.id.payAccountNameInput);
         paidAccountNameInput = (EditText)findViewById(R.id.paidAccountNameInput);
         payAmountInput = (EditText)findViewById(R.id.payAmountInput);
         payDateInput = (EditText)findViewById(R.id.payDateInput);
+
+        payDateInput.setText(MyLib.getCurrentDate());
+    }
+
+    public void addNewPaymentButtonClicked(View view){
 
         payAccountNameInput.setText("Freedom");
         paidAccountNameInput.setText("BoA");
@@ -45,7 +48,7 @@ public class AddPaymentActivity extends ActionBarActivity {
         try{
             Double.parseDouble(amount);
         }catch (Exception e){
-            payAmountInput.setText("20");
+            payAmountInput.setText("0");
         }
 
         String allInput = payAccountNameInput.getText().toString() + ",    " +

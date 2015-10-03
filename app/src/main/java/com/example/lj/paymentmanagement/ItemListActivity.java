@@ -54,7 +54,7 @@ public class ItemListActivity extends FragmentActivity
         }
 
         //init database
-//        this.deleteDatabase(myData.DATABASE_NAME);
+        //this.deleteDatabase(myData.DATABASE_NAME);
         myData = new MyData(this, null, null, 1);
         myData.accountListAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, MyData.accountList);
@@ -106,7 +106,9 @@ public class ItemListActivity extends FragmentActivity
             if(resultCode == RESULT_OK){
                 String tmp = data.getData().toString();
                 Toast.makeText(this, tmp, Toast.LENGTH_LONG).show();
-                myData.addAccountToDatabase(myData.getMyAccountFromString(tmp));
+                if(!myData.ifAccountAlreadyExist(tmp)) {
+                    myData.addAccountToDatabase(myData.getMyAccountFromString(tmp));
+                }
             }
         }
 

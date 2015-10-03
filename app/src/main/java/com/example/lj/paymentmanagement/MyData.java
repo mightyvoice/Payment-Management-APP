@@ -41,8 +41,8 @@ public class MyData extends SQLiteOpenHelper{
     public static final String COLUMN_PAY_ACCOUNT = "payAccount";
     public static final String COLUMN_PAID_ACCOUNT = "paidAccount";
     public static final String COLUMN_PAY_AMOUNT = "payAmount";
-//    public static final String COLUMN_ACCOUNT_DUEDAY = "accountDueDay";
-//    public static final String COLUMN_ACCOUNT_TOPAY = "accountToPay";
+    public static final String COLUMN_PAY_DATE = "payDate";
+    public static final String COLUMN_PAY_TOTAL_THIS_MONTH = "payTotalThisMonth";
 
 
     public MyData(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
@@ -67,7 +67,9 @@ public class MyData extends SQLiteOpenHelper{
                 COLUMN_ACCOUNT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_PAY_ACCOUNT + " TEXT, " +
                 COLUMN_PAID_ACCOUNT + " TEXT, " +
-                COLUMN_PAY_AMOUNT + " DOUBLE" +
+                COLUMN_PAY_AMOUNT + " DOUBLE, " +
+                COLUMN_PAY_DATE + " TEXT, " +
+                COLUMN_PAY_TOTAL_THIS_MONTH + " DOUBLE " +
                 ");";
         db.execSQL(query);
     }
@@ -143,6 +145,9 @@ public class MyData extends SQLiteOpenHelper{
         values.put(COLUMN_PAY_ACCOUNT, myPayment.payAccountName);
         values.put(COLUMN_PAID_ACCOUNT, myPayment.paidAccountName);
         values.put(COLUMN_PAY_AMOUNT, myPayment.payAmount);
+        values.put(COLUMN_PAY_DATE, myPayment.payDate);
+        values.put(COLUMN_PAY_TOTAL_THIS_MONTH,
+                myPayment.payAmount + getCurrentTotalPayThisMonth());
         SQLiteDatabase db = getWritableDatabase();
         db.insert(TABLE_PAYMENTS, null, values);
         db.close();
@@ -163,7 +168,11 @@ public class MyData extends SQLiteOpenHelper{
                 tmp += cursor.getString(
                         cursor.getColumnIndex(COLUMN_PAID_ACCOUNT))+",    ";
                 tmp += cursor.getString(
-                        cursor.getColumnIndex(COLUMN_PAY_AMOUNT))+",";
+                        cursor.getColumnIndex(COLUMN_PAY_AMOUNT))+",  ";
+                tmp += cursor.getString(
+                        cursor.getColumnIndex(COLUMN_PAY_DATE))+",   ";
+                tmp += cursor.getString(
+                        cursor.getColumnIndex(COLUMN_PAY_TOTAL_THIS_MONTH));
                 paymentList.add(tmp);
             }
             cursor.moveToNext();
@@ -188,8 +197,47 @@ public class MyData extends SQLiteOpenHelper{
 
     public MyPaymentItem getMyPaymentItemFromString(String data){
         String[] l = data.split(",");
-        MyPaymentItem ans = new MyPaymentItem(l[0], l[1], Double.parseDouble(l[2]));
+        MyPaymentItem ans = new MyPaymentItem(l[0], l[1],
+                Double.parseDouble(l[2]), l[3]);
         return ans;
     }
 
+    public boolean ifAccountNameAlreadyExist(String accountName){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM " + TABLE_ACCOUNTS + " WHERE " +
+                COLUMN_ACCOUNT_NAME + "=\"" + accountName +"\";";
+        Cursor cursor = db.rawQuery(query, null);
+        cursor.moveToFirst();
+        if(cursor.isAfterLast()){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+
+    public boolean ifAccountAlreadyExist(String account) {
+        String[] tmp = account.split(",");
+        if(ifAccountNameAlreadyExist(tmp[0])){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    private Double getCurrentTotalPayThisMonth(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM " + TABLE_PAYMENTS + ";";
+        Cursor cursor = db.rawQuery(query, null);
+        cursor.moveToFirst();
+        Double totalBalance = 0.0;
+        while(!cursor.isAfterLast()){
+            totalBalance += cursor.getDouble(
+                    cursor.getColumnIndex(COLUMN_PAY_TOTAL_THIS_MONTH));
+            cursor.moveToNext();
+        }
+        db.close();
+        return totalBalance;
+    }
 }
