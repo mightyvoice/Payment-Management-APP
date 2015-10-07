@@ -25,9 +25,11 @@ public class MyData extends SQLiteOpenHelper{
 
     public static ArrayAdapter<String> paymentListAdapter;
 
-    //database constant variables
+    //database information
     private static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "myAccountsAndPayments.db";
+
+    //for the account table
     public static final String TABLE_ACCOUNTS = "myAccounts";
     public static final String COLUMN_ACCOUNT_ID = "_id";
     public static final String COLUMN_ACCOUNT_NAME = "accountName";
@@ -35,7 +37,7 @@ public class MyData extends SQLiteOpenHelper{
     public static final String COLUMN_ACCOUNT_DUEDAY = "accountDueDay";
     public static final String COLUMN_ACCOUNT_TOPAY = "accountToPay";
 
-
+    //for the payment table
     public static final String TABLE_PAYMENTS = "myPayments";
     public static final String COLUMN_PAYMENT_ID = "_id";
     public static final String COLUMN_PAY_ACCOUNT = "payAccount";
@@ -129,13 +131,15 @@ public class MyData extends SQLiteOpenHelper{
                         cursor.getColumnIndex(COLUMN_ACCOUNT_BANK))+",";
                 tmp += "    "+ cursor.getString(
                         cursor.getColumnIndex(COLUMN_ACCOUNT_DUEDAY))+",";
-                tmp += "    "+ cursor.getString(
-                        cursor.getColumnIndex(COLUMN_ACCOUNT_TOPAY))+",";
+                tmp += "    $"+ cursor.getString(
+                        cursor.getColumnIndex(COLUMN_ACCOUNT_TOPAY));
                 accountList.add(tmp);
             }
             cursor.moveToNext();
         }
         db.close();
+        accountList.add("Total Balance Need To Pay: $"
+                + getCurrentTotalBalanceNeedToPay().toString());
         accountListAdapter.notifyDataSetChanged();
     }
 
@@ -164,13 +168,13 @@ public class MyData extends SQLiteOpenHelper{
         while(!cursor.isAfterLast()) {
             if (cursor.getString(cursor.getColumnIndex(COLUMN_PAY_ACCOUNT)) != null) {
                 String tmp = cursor.getString(
-                        cursor.getColumnIndex(COLUMN_PAY_ACCOUNT))+",";
+                        cursor.getColumnIndex(COLUMN_PAY_ACCOUNT))+",   ";
                 tmp += cursor.getString(
-                        cursor.getColumnIndex(COLUMN_PAID_ACCOUNT))+",    ";
+                        cursor.getColumnIndex(COLUMN_PAID_ACCOUNT))+",    $";
                 tmp += cursor.getString(
-                        cursor.getColumnIndex(COLUMN_PAY_AMOUNT))+",  ";
+                        cursor.getColumnIndex(COLUMN_PAY_AMOUNT))+",   ";
                 tmp += cursor.getString(
-                        cursor.getColumnIndex(COLUMN_PAY_DATE))+",   ";
+                        cursor.getColumnIndex(COLUMN_PAY_DATE))+",    $";
                 tmp += cursor.getString(
                         cursor.getColumnIndex(COLUMN_PAY_TOTAL_THIS_MONTH));
                 paymentList.add(tmp);
@@ -190,8 +194,10 @@ public class MyData extends SQLiteOpenHelper{
 
     public MyAccount getMyAccountFromString(String data){
         String[] l = data.split(",");
-        MyAccount ans = new MyAccount(l[0], l[1],
-                MyLib.stringToInteger(l[2]), 0.0);
+        MyAccount ans = new MyAccount(l[0],
+                l[1],
+                MyLib.stringToInteger(l[2]),
+                Double.parseDouble(l[3]));
         return ans;
     }
 
@@ -234,10 +240,25 @@ public class MyData extends SQLiteOpenHelper{
         Double totalBalance = 0.0;
         while(!cursor.isAfterLast()){
             totalBalance += cursor.getDouble(
-                    cursor.getColumnIndex(COLUMN_PAY_TOTAL_THIS_MONTH));
+                    cursor.getColumnIndex(COLUMN_PAY_AMOUNT));
             cursor.moveToNext();
         }
         db.close();
         return totalBalance;
+    }
+
+    public Double getCurrentTotalBalanceNeedToPay(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM " + TABLE_ACCOUNTS + ";";
+        Cursor cursor = db.rawQuery(query, null);
+        cursor.moveToFirst();
+        Double totalToPayBalance = 0.0;
+        while(!cursor.isAfterLast()){
+            totalToPayBalance += cursor.getDouble(
+                    cursor.getColumnIndex(COLUMN_ACCOUNT_TOPAY));
+            cursor.moveToNext();
+        }
+        db.close();
+        return totalToPayBalance;
     }
 }

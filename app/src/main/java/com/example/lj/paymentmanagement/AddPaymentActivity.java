@@ -41,8 +41,8 @@ public class AddPaymentActivity extends ActionBarActivity {
 
     public void addNewPaymentButtonClicked(View view){
 
-        payAccountNameInput.setText("Freedom");
-        paidAccountNameInput.setText("BoA");
+//        payAccountNameInput.setText("Freedom");
+//        paidAccountNameInput.setText("BoA");
 //        payAmountInput.setText("20");
         String amount = payAmountInput.getText().toString();
         try{

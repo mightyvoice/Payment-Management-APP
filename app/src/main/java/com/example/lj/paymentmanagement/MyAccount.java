@@ -34,7 +34,7 @@ public class MyAccount {
         this.dueDay = dueDay;
         this.statementBalance = 0.0;
         this.currentBalance = 0.0;
-        this.toPayBalance = 0.0;
+        this.toPayBalance = toPayBalance;
     }
 
     public String toString(){

@@ -34,15 +34,16 @@
         android:text="Add"
         android:id="@+id/addNewAccountButton"
         android:onClick="addNewAccountButtonClicked"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/newAccountDueDayInput"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="86dp" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/paidAccountNameInput"
         android:width="200dp"
-        android:layout_marginTop="41dp"
+        android:layout_marginTop="25dp"
         android:layout_below="@+id/payAccountNameInput"
         android:layout_alignStart="@+id/payAccountNameInput" />
 
@@ -75,5 +76,24 @@
         android:layout_alignBottom="@+id/payAmountLabel"
         android:layout_alignStart="@+id/paidAccountNameInput"
         android:layout_alignEnd="@+id/paidAccountNameInput" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="To Pay"
+        android:id="@+id/toPayLabel"
+        android:textSize="20dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="date"
+        android:ems="10"
+        android:id="@+id/toPayInput"
+        android:layout_centerVertical="true"
+        android:layout_alignStart="@+id/newAccountDueDayInput"
+        android:layout_alignEnd="@+id/newAccountDueDayInput" />
 
 </RelativeLayout>

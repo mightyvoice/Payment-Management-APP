@@ -54,7 +54,7 @@ public class ItemListActivity extends FragmentActivity
         }
 
         //init database
-        //this.deleteDatabase(myData.DATABASE_NAME);
+//        this.deleteDatabase(myData.DATABASE_NAME);
         myData = new MyData(this, null, null, 1);
         myData.accountListAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, MyData.accountList);

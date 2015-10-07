@@ -20,6 +20,7 @@ public class AddAccountActivity extends ActionBarActivity {
     public EditText newAccountNameInput;
     public EditText newAccountBankInput;
     public EditText newAccountDueDayInput;
+    public EditText newAccountToPayInput;
     public Button addNewAccountButton;
 
     TextToSpeech ttsObj;
@@ -42,13 +43,15 @@ public class AddAccountActivity extends ActionBarActivity {
         newAccountNameInput = (EditText)findViewById(R.id.payAccountNameInput);
         newAccountBankInput = (EditText)findViewById(R.id.paidAccountNameInput);
         newAccountDueDayInput = (EditText)findViewById(R.id.newAccountDueDayInput);
+        newAccountToPayInput = (EditText)findViewById(R.id.toPayInput);
 
-        newAccountNameInput.setText("Freedom");
-        newAccountBankInput.setText("BoA");
+//        newAccountNameInput.setText("Freedom");
+//        newAccountBankInput.setText("BoA");
 
         String allInput = newAccountNameInput.getText().toString() + ",    " +
-                newAccountBankInput.getText().toString() + ",    " +
-                newAccountDueDayInput.getText().toString();
+                newAccountBankInput.getText().toString() + ",   " +
+                newAccountDueDayInput.getText().toString()+",   " +
+                newAccountToPayInput.getText().toString();
         Intent data = new Intent();
         data.setData(Uri.parse(allInput));
         setResult(RESULT_OK, data);
