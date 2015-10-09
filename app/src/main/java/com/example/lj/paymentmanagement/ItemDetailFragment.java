@@ -90,18 +90,18 @@ public class ItemDetailFragment extends Fragment {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> parent,
                                                    View view, int position, long id) {
-                        MyData.clickedItemID = position;
                         if(position == MyData.accountList.size()-1){
                             Toast.makeText(getActivity(),
                                     "This item cannot be deleted or edited", Toast.LENGTH_LONG).show();
                             return true;
                         }
-                        startActivity(new Intent(getActivity(), EditOrDeleteAccountActivity.class));
+                        MyData.myData.selectAccountIndex = position;
+                        MyData.myData.selectedAccount = MyData.getMyAccountFromString(
+                                MyData.accountList.get(position));
+                        startActivity(new Intent(getActivity(),
+                                EditOrDeleteAccountActivity.class));
 //                        Toast.makeText(getActivity(),
 //                                MyData.accountList.get(position) + " is Clicked", Toast.LENGTH_LONG).show();
-                        if(MyData.confirmedToDelete && MyData.clickedItemID > -1){
-                            MyData.deleteAccountByCurrentIndex();
-                        }
                         return true;
                     }
                 });

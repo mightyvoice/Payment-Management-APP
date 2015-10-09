@@ -17,6 +17,7 @@ import java.util.Date;
 
 public class MyData extends SQLiteOpenHelper{
 
+    public static MyData myData;
     public static ArrayList<String> accountList = new ArrayList<String>();
     public static ArrayAdapter<String> accountListAdapter;
 
@@ -25,7 +26,9 @@ public class MyData extends SQLiteOpenHelper{
 
     public static boolean confirmedToDelete = false;
 
-    public static Integer clickedItemID = -1;
+    public static Integer selectAccountIndex = -1;
+
+    public static MyAccount selectedAccount;
 
     //database information
     private static final int DATABASE_VERSION = 1;
@@ -47,6 +50,9 @@ public class MyData extends SQLiteOpenHelper{
     public static final String COLUMN_PAY_AMOUNT = "payAmount";
     public static final String COLUMN_PAY_DATE = "payDate";
     public static final String COLUMN_PAY_TOTAL_THIS_MONTH = "payTotalThisMonth";
+
+
+    ///////////////////////////////////////////////////
 
     public MyData(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
@@ -132,14 +138,14 @@ public class MyData extends SQLiteOpenHelper{
                         cursor.getColumnIndex(COLUMN_ACCOUNT_BANK))+",";
                 tmp += "    "+ cursor.getString(
                         cursor.getColumnIndex(COLUMN_ACCOUNT_DUEDAY))+",";
-                tmp += "    $"+ cursor.getString(
+                tmp += "    "+ cursor.getString(
                         cursor.getColumnIndex(COLUMN_ACCOUNT_TOPAY));
                 accountList.add(tmp);
             }
             cursor.moveToNext();
         }
         db.close();
-        accountList.add("Total Balance Need To Pay: $"
+        accountList.add("Total Balance Need To Pay: "
                 + getCurrentTotalBalanceNeedToPay().toString());
         accountListAdapter.notifyDataSetChanged();
     }
@@ -171,11 +177,11 @@ public class MyData extends SQLiteOpenHelper{
                 String tmp = cursor.getString(
                         cursor.getColumnIndex(COLUMN_PAY_ACCOUNT))+",   ";
                 tmp += cursor.getString(
-                        cursor.getColumnIndex(COLUMN_PAID_ACCOUNT))+",    $";
+                        cursor.getColumnIndex(COLUMN_PAID_ACCOUNT))+",    ";
                 tmp += cursor.getString(
                         cursor.getColumnIndex(COLUMN_PAY_AMOUNT))+",   ";
                 tmp += cursor.getString(
-                        cursor.getColumnIndex(COLUMN_PAY_DATE))+",    $";
+                        cursor.getColumnIndex(COLUMN_PAY_DATE))+",    ";
                 tmp += cursor.getString(
                         cursor.getColumnIndex(COLUMN_PAY_TOTAL_THIS_MONTH));
                 paymentList.add(tmp);
@@ -186,17 +192,10 @@ public class MyData extends SQLiteOpenHelper{
         paymentListAdapter.notifyDataSetChanged();
     }
 
-    //delete a row to the myAccounts table
-    public void deleteAccountFromDatabase(String accountName){
-        SQLiteDatabase db = getWritableDatabase();
-        db.execSQL("DELETE FROM " + TABLE_ACCOUNTS + " WHERE "
-                + COLUMN_ACCOUNT_NAME + "=\"" + accountName + "\";");
-    }
-
-    public MyAccount getMyAccountFromString(String data){
+    public static MyAccount getMyAccountFromString(String data){
         String[] l = data.split(",");
-        MyAccount ans = new MyAccount(l[0],
-                l[1],
+        MyAccount ans = new MyAccount(l[0].replaceAll(" ", ""),
+                l[1].replaceAll(" ", ""),
                 MyLib.stringToInteger(l[2]),
                 Double.parseDouble(l[3]));
         return ans;
@@ -263,8 +262,20 @@ public class MyData extends SQLiteOpenHelper{
         return totalToPayBalance;
     }
 
-    public static void deleteAccountByCurrentIndex(){
-        accountList.remove(clickedItemID);
-        accountListAdapter.notifyDataSetChanged();
+    public void deleteSelectedAccount(){
+        if(selectedAccount == null || selectedAccount.accountName == ""){
+            return;
+        }
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("DELETE FROM " + TABLE_ACCOUNTS + " WHERE "
+                + COLUMN_ACCOUNT_NAME + "=\"" + selectedAccount.accountName + "\";");
+        db.close();
+
+        //reset global variables
+        confirmedToDelete = false;
+        selectedAccount = null;
+        selectAccountIndex = -1;
+
+        updateAccountListView();
     }
 }

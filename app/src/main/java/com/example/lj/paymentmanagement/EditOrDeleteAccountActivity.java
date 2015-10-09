@@ -34,13 +34,17 @@ public class EditOrDeleteAccountActivity extends ActionBarActivity {
         int width = ds.widthPixels;
         int height = ds.heightPixels;
 
-        getWindow().setLayout((int) (width * 0.6), (int) (height * 0.9));
+        getWindow().setLayout((int) (width * 0.6), (int) (height * 0.7));
 
         newAccountNameInput = (EditText) findViewById(R.id.payAccountNameInput);
-//      newAccountBankInput = (EditText) findViewById(R.id.paidAccountNameInput);
-//      newAccountDueDayInput = (EditText) findViewById(R.id.newAccountDueDayInput);
-//      newAccountToPayInput = (EditText) findViewById(R.id.toPayInput);
-        newAccountNameInput.setText(MyData.accountList.get(MyData.clickedItemID).split(",")[0]);
+        newAccountBankInput = (EditText) findViewById(R.id.paidAccountNameInput);
+        newAccountDueDayInput = (EditText) findViewById(R.id.newAccountDueDayInput);
+        newAccountToPayInput = (EditText) findViewById(R.id.toPayInput);
+
+        newAccountNameInput.setText(MyData.selectedAccount.accountName);
+        newAccountBankInput.setText(MyData.selectedAccount.bankName);
+        newAccountDueDayInput.setText(MyData.selectedAccount.dueDay.toString());
+        newAccountToPayInput.setText(MyData.selectedAccount.toPayBalance.toString());
 
     }
 
@@ -65,11 +69,16 @@ public class EditOrDeleteAccountActivity extends ActionBarActivity {
     public void deleteAccountButtonClicked(View view) {
         Toast.makeText(this, "delete button clicked", Toast.LENGTH_LONG).show();
         new AlertDialog.Builder(this).setTitle("Confirm")
-                .setMessage("Confirm to delete the account")
+                .setMessage("Confirm to delete the account: "+
+                MyData.selectedAccount.accountName+" from " +
+                MyData.selectedAccount.bankName)
                 .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         MyData.confirmedToDelete = true;
+                        if(MyData.confirmedToDelete && MyData.selectAccountIndex > -1){
+                            MyData.myData.deleteSelectedAccount();
+                        }
                         finish();
                     }
                 }).setNegativeButton("Return", new DialogInterface.OnClickListener(){

@@ -40,7 +40,7 @@ public class ItemListActivity extends FragmentActivity
      * device.
      */
     private boolean mTwoPane;
-    static MyData myData;
+//    static MyData myData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,13 +63,13 @@ public class ItemListActivity extends FragmentActivity
 
         //init database
 //        this.deleteDatabase(myData.DATABASE_NAME);
-        myData = new MyData(this, null, null, 1);
-        myData.accountListAdapter = new ArrayAdapter<String>(this,
+        MyData.myData = new MyData(this, null, null, 1);
+        MyData.myData.accountListAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, MyData.accountList);
-        myData.paymentListAdapter = new ArrayAdapter<String>(this,
+        MyData.myData.paymentListAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, MyData.paymentList);
-        myData.updateAccountListView();
-        myData.updatePaymentListView();
+        MyData.myData.updateAccountListView();
+        MyData.myData.updatePaymentListView();
 //
     }
 
@@ -115,8 +115,8 @@ public class ItemListActivity extends FragmentActivity
             if(resultCode == RESULT_OK){
                 String tmp = data.getData().toString();
                 Toast.makeText(this, tmp, Toast.LENGTH_LONG).show();
-                if(!myData.ifAccountAlreadyExist(tmp)) {
-                    myData.addAccountToDatabase(myData.getMyAccountFromString(tmp));
+                if(!MyData.myData.ifAccountAlreadyExist(tmp)) {
+                    MyData.myData.addAccountToDatabase(MyData.myData.getMyAccountFromString(tmp));
                 }
             }
         }
@@ -125,12 +125,12 @@ public class ItemListActivity extends FragmentActivity
             if(resultCode == RESULT_OK){
                 String tmp = data.getData().toString();
                 Toast.makeText(this, tmp, Toast.LENGTH_LONG).show();
-                myData.addPaymentToDatabase(
-                        myData.getMyPaymentItemFromString(tmp));
+                MyData.myData.addPaymentToDatabase(
+                        MyData.myData.getMyPaymentItemFromString(tmp));
 
                 //update the toPayBalance of the account
                 String[] tmp1 = tmp.split(",");
-                myData.updateAccountToPayBalance(tmp1[0], Double.parseDouble(tmp1[2]));
+                MyData.myData.updateAccountToPayBalance(tmp1[0], Double.parseDouble(tmp1[2]));
             }
         }
     }
