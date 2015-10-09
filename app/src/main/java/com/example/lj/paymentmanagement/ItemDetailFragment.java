@@ -99,7 +99,7 @@ public class ItemDetailFragment extends Fragment {
                             return true;
                         }
                         MyData.selectAccountIndex = position;
-                        MyData.selectedAccount = MyData.getMyAccountFromString(
+                        MyData.selectedAccount = MyAccount.getMyAccountFromString(
                                 MyData.accountList.get(position));
                         startActivity(new Intent(getActivity(),
                                 EditOrDeleteAccountActivity.class));
@@ -122,7 +122,7 @@ public class ItemDetailFragment extends Fragment {
                             return true;
                         }
                         MyData.selectPaymentItemIndex = position;
-                        MyData.selectedPaymentItem = MyData.getMyPaymentItemFromString(
+                        MyData.selectedPaymentItem = MyPaymentItem.getMyPaymentItemFromString(
                                 MyData.paymentList.get(position));
                         startActivity(new Intent(getActivity(),
                                 EditOrDeletePaymentActivity.class));

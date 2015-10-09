@@ -47,7 +47,8 @@ public class EditOrDeletePaymentActivity extends ActionBarActivity {
         new AlertDialog.Builder(this).setTitle("Confirm")
                 .setMessage("Confirm to delete the payment to: "+
                         MyData.selectedPaymentItem.payAccountName+" on " +
-                        MyData.selectedPaymentItem.payDate)
+                        MyData.selectedPaymentItem.payDate + " of $" +
+                        MyData.selectedPaymentItem.payAmount.toString())
                 .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -57,7 +58,7 @@ public class EditOrDeletePaymentActivity extends ActionBarActivity {
                         }
                         finish();
                     }
-                }).setNegativeButton("Return", new DialogInterface.OnClickListener(){
+                }).setNegativeButton("Return", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 MyData.confirmedToDelete = false;

@@ -114,7 +114,7 @@ public class ItemListActivity extends FragmentActivity
                 String tmp = data.getData().toString();
                 Toast.makeText(this, tmp, Toast.LENGTH_LONG).show();
                 if(!MyData.myData.ifAccountAlreadyExist(tmp)) {
-                    MyData.myData.addAccountToDatabase(MyData.myData.getMyAccountFromString(tmp));
+                    MyData.myData.addAccountToDatabase(MyAccount.getMyAccountFromString(tmp));
                 }
             }
         }
@@ -124,7 +124,7 @@ public class ItemListActivity extends FragmentActivity
                 String tmp = data.getData().toString();
                 Toast.makeText(this, tmp, Toast.LENGTH_LONG).show();
                 MyData.myData.addPaymentToDatabase(
-                        MyData.myData.getMyPaymentItemFromString(tmp));
+                        MyPaymentItem.getMyPaymentItemFromString(tmp));
 
                 //update the toPayBalance of the account
                 String[] tmp1 = tmp.split(",");

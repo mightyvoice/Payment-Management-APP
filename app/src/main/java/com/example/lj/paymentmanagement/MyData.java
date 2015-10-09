@@ -34,24 +34,24 @@ public class MyData extends SQLiteOpenHelper{
 
     //database information
     private static final int DATABASE_VERSION = 1;
-    public static final String DATABASE_NAME = "myAccountsAndPayments.db";
+    private static final String DATABASE_NAME = "myAccountsAndPayments.db";
 
     //column names for the account table
-    public static final String TABLE_ACCOUNTS = "myAccounts";
-    public static final String COLUMN_ACCOUNT_ID = "_id";
-    public static final String COLUMN_ACCOUNT_NAME = "accountName";
-    public static final String COLUMN_ACCOUNT_BANK = "accountBank";
-    public static final String COLUMN_ACCOUNT_DUEDAY = "accountDueDay";
-    public static final String COLUMN_ACCOUNT_TOPAY = "accountToPay";
+    private static final String TABLE_ACCOUNTS = "myAccounts";
+    private static final String COLUMN_ACCOUNT_ID = "_id";
+    private static final String COLUMN_ACCOUNT_NAME = "accountName";
+    private static final String COLUMN_ACCOUNT_BANK = "accountBank";
+    private static final String COLUMN_ACCOUNT_DUEDAY = "accountDueDay";
+    private static final String COLUMN_ACCOUNT_TOPAY = "accountToPay";
 
     //column names for the payment table
-    public static final String TABLE_PAYMENTS = "myPayments";
-    public static final String COLUMN_PAYMENT_ID = "_id";
-    public static final String COLUMN_PAY_ACCOUNT = "payAccount";
-    public static final String COLUMN_PAID_ACCOUNT = "paidAccount";
-    public static final String COLUMN_PAY_AMOUNT = "payAmount";
-    public static final String COLUMN_PAY_DATE = "payDate";
-    public static final String COLUMN_PAY_TOTAL_THIS_MONTH = "payTotalThisMonth";
+    private static final String TABLE_PAYMENTS = "myPayments";
+    private static final String COLUMN_PAYMENT_ID = "_id";
+    private static final String COLUMN_PAY_ACCOUNT = "payAccount";
+    private static final String COLUMN_PAID_ACCOUNT = "paidAccount";
+    private static final String COLUMN_PAY_AMOUNT = "payAmount";
+    private static final String COLUMN_PAY_DATE = "payDate";
+    private static final String COLUMN_PAY_TOTAL_THIS_MONTH = "payTotalThisMonth";
 
 
     ///////////////////////////////////////////////////
@@ -135,12 +135,12 @@ public class MyData extends SQLiteOpenHelper{
         while(!cursor.isAfterLast()) {
             if (cursor.getString(cursor.getColumnIndex(COLUMN_ACCOUNT_NAME)) != null) {
                 String tmp = cursor.getString(
-                        cursor.getColumnIndex(COLUMN_ACCOUNT_NAME))+",";
+                        cursor.getColumnIndex(COLUMN_ACCOUNT_NAME))+",   ";
                 tmp += cursor.getString(
-                        cursor.getColumnIndex(COLUMN_ACCOUNT_BANK))+",";
-                tmp += "    "+ cursor.getString(
-                        cursor.getColumnIndex(COLUMN_ACCOUNT_DUEDAY))+",";
-                tmp += "    "+ cursor.getString(
+                        cursor.getColumnIndex(COLUMN_ACCOUNT_BANK))+",    ";
+                tmp += cursor.getString(
+                        cursor.getColumnIndex(COLUMN_ACCOUNT_DUEDAY))+",   $";
+                tmp += cursor.getString(
                         cursor.getColumnIndex(COLUMN_ACCOUNT_TOPAY));
                 accountList.add(tmp);
             }
@@ -179,9 +179,9 @@ public class MyData extends SQLiteOpenHelper{
                 String tmp = cursor.getString(
                         cursor.getColumnIndex(COLUMN_PAY_ACCOUNT))+",   ";
                 tmp += cursor.getString(
-                        cursor.getColumnIndex(COLUMN_PAID_ACCOUNT))+",    ";
+                        cursor.getColumnIndex(COLUMN_PAID_ACCOUNT))+",   $";
                 tmp += cursor.getString(
-                        cursor.getColumnIndex(COLUMN_PAY_AMOUNT))+",   ";
+                        cursor.getColumnIndex(COLUMN_PAY_AMOUNT))+",    ";
                 tmp += cursor.getString(
                         cursor.getColumnIndex(COLUMN_PAY_DATE));
                 paymentList.add(tmp);
@@ -192,24 +192,6 @@ public class MyData extends SQLiteOpenHelper{
         paymentList.add("Total payment in this month is: $"+
                 getCurrentTotalPayThisMonth().toString());
         paymentListAdapter.notifyDataSetChanged();
-    }
-
-    public static MyAccount getMyAccountFromString(String data){
-        String[] l = data.split(",");
-        MyAccount ans = new MyAccount(l[0].replaceAll(" ", ""),
-                l[1].replaceAll(" ", ""),
-                MyLib.stringToInteger(l[2]),
-                Double.parseDouble(l[3]));
-        return ans;
-    }
-
-    public static MyPaymentItem getMyPaymentItemFromString(String data){
-        String[] l = data.split(",");
-        MyPaymentItem ans = new MyPaymentItem(l[0].replaceAll(" ", ""),
-                l[1].replaceAll(" ", ""),
-                Double.parseDouble(l[2]),
-                l[3].replaceAll(" ", ""));
-        return ans;
     }
 
     public boolean ifAccountNameAlreadyExist(String accountName){
@@ -272,7 +254,11 @@ public class MyData extends SQLiteOpenHelper{
         }
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("DELETE FROM " + TABLE_ACCOUNTS + " WHERE "
-                + COLUMN_ACCOUNT_NAME + "=\"" + selectedAccount.accountName + "\";");
+                + COLUMN_ACCOUNT_NAME + "=\"" + selectedAccount.accountName + "\" AND " +
+                COLUMN_ACCOUNT_BANK + "=\"" + selectedAccount.bankName + "\";");
+        db.execSQL("DELETE FROM " + TABLE_PAYMENTS + " WHERE "
+                + COLUMN_PAY_ACCOUNT + "=\"" +
+                selectedAccount.accountName +"\";");
         db.close();
 
         //reset global variables
@@ -281,6 +267,7 @@ public class MyData extends SQLiteOpenHelper{
         selectAccountIndex = -1;
 
         updateAccountListView();
+        updatePaymentListView();
     }
 
     public void deleteSelectedPaymentItem(){
@@ -290,7 +277,10 @@ public class MyData extends SQLiteOpenHelper{
         SQLiteDatabase db = getWritableDatabase();
         db.execSQL("DELETE FROM " + TABLE_PAYMENTS + " WHERE "
                 + COLUMN_PAY_ACCOUNT + "=\"" +
-                selectedPaymentItem.payAccountName+ "\";");
+                selectedPaymentItem.payAccountName+ "\" AND " +
+                COLUMN_PAY_AMOUNT + "=" +
+                selectedPaymentItem.payAmount.toString() + " AND " +
+                COLUMN_PAY_DATE +"=\"" + selectedPaymentItem.payDate+"\";");
         db.close();
 
         //reset global variables
@@ -299,5 +289,6 @@ public class MyData extends SQLiteOpenHelper{
         selectPaymentItemIndex = -1;
 
         updatePaymentListView();
+        updateAccountListView();
     }
 }

@@ -44,4 +44,17 @@ public class MyAccount {
                 this.toPayBalance.toString();
     }
 
+
+    public static MyAccount getMyAccountFromString(String data){
+        String[] l = data.split(",");
+        if(l[3].indexOf("$") > -1){
+            l[3] = MyLib.cutFirstChar(l[3]);
+        }
+        MyAccount ans = new MyAccount(l[0].replaceAll(" ", ""),
+                l[1].replaceAll(" ", ""),
+                MyLib.stringToInteger(l[2]),
+                Double.parseDouble(l[3]));
+        return ans;
+    }
+
 }
