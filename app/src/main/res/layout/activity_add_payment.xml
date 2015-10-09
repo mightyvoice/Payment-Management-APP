@@ -25,14 +25,14 @@
         android:id="@+id/payAccountNameInput"
         android:width="200dp"
         android:layout_alignTop="@+id/payAccountNameLabel"
-        android:layout_alignStart="@+id/addNewPaymentButton"
+        android:layout_alignStart="@+id/changePaymentButton"
         android:layout_marginTop="-5dp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add"
-        android:id="@+id/addNewPaymentButton"
+        android:id="@+id/changePaymentButton"
         android:onClick="addNewPaymentButtonClicked"
         android:layout_below="@+id/payDateInput"
         android:layout_centerHorizontal="true" />

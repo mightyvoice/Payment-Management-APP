@@ -28,16 +28,23 @@
         </activity>
         <activity
             android:name=".AddAccountActivity"
+            android:label="@string/title_activity_add_account"
             android:theme="@style/AppTheme.AddNewAccountWindowThem" >
         </activity>
         <activity
             android:name=".AddPaymentActivity"
+            android:label="@string/title_activity_add_payment"
             android:theme="@style/AppTheme.AddNewPaymentWindowThem" >
         </activity>
         <activity
             android:name=".EditOrDeleteAccountActivity"
             android:label="@string/title_activity_edit_or_delete_account"
             android:theme="@style/AppTheme.EditOrDeleteAccountWindowThem">
+        </activity>
+        <activity
+            android:name=".EditOrDeletePaymentActivity"
+            android:label="@string/title_activity_edit_or_delete_payment"
+            android:theme="@style/AppTheme.EditOrDeletePaymentWindowThem">
         </activity>
     </application>
 

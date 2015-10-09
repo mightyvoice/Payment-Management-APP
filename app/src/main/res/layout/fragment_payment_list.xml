@@ -15,7 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Name,   Paid,   Amount,   Date,   Total"
+        android:text="Name,   Paid,   Amount,   Date"
         android:id="@+id/textView"
         android:layout_marginLeft="40dp"
         android:textSize="20dp" />

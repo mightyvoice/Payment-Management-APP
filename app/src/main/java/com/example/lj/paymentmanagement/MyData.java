@@ -27,8 +27,10 @@ public class MyData extends SQLiteOpenHelper{
     public static boolean confirmedToDelete = false;
 
     public static Integer selectAccountIndex = -1;
+    public static Integer selectPaymentItemIndex = -1;
 
     public static MyAccount selectedAccount;
+    public static MyPaymentItem selectedPaymentItem;
 
     //database information
     private static final int DATABASE_VERSION = 1;
@@ -145,7 +147,7 @@ public class MyData extends SQLiteOpenHelper{
             cursor.moveToNext();
         }
         db.close();
-        accountList.add("Total Balance Need To Pay: "
+        accountList.add("Total Balance Need To Pay: $"
                 + getCurrentTotalBalanceNeedToPay().toString());
         accountListAdapter.notifyDataSetChanged();
     }
@@ -181,14 +183,14 @@ public class MyData extends SQLiteOpenHelper{
                 tmp += cursor.getString(
                         cursor.getColumnIndex(COLUMN_PAY_AMOUNT))+",   ";
                 tmp += cursor.getString(
-                        cursor.getColumnIndex(COLUMN_PAY_DATE))+",    ";
-                tmp += cursor.getString(
-                        cursor.getColumnIndex(COLUMN_PAY_TOTAL_THIS_MONTH));
+                        cursor.getColumnIndex(COLUMN_PAY_DATE));
                 paymentList.add(tmp);
             }
             cursor.moveToNext();
         }
         db.close();
+        paymentList.add("Total payment in this month is: $"+
+                getCurrentTotalPayThisMonth().toString());
         paymentListAdapter.notifyDataSetChanged();
     }
 
@@ -201,10 +203,12 @@ public class MyData extends SQLiteOpenHelper{
         return ans;
     }
 
-    public MyPaymentItem getMyPaymentItemFromString(String data){
+    public static MyPaymentItem getMyPaymentItemFromString(String data){
         String[] l = data.split(",");
-        MyPaymentItem ans = new MyPaymentItem(l[0], l[1],
-                Double.parseDouble(l[2]), l[3]);
+        MyPaymentItem ans = new MyPaymentItem(l[0].replaceAll(" ", ""),
+                l[1].replaceAll(" ", ""),
+                Double.parseDouble(l[2]),
+                l[3].replaceAll(" ", ""));
         return ans;
     }
 
@@ -244,7 +248,7 @@ public class MyData extends SQLiteOpenHelper{
             cursor.moveToNext();
         }
         db.close();
-        return totalBalance;
+        return MyLib.roundTo2DecimalPoints(totalBalance);
     }
 
     private Double getCurrentTotalBalanceNeedToPay(){
@@ -277,5 +281,23 @@ public class MyData extends SQLiteOpenHelper{
         selectAccountIndex = -1;
 
         updateAccountListView();
+    }
+
+    public void deleteSelectedPaymentItem(){
+        if(selectedPaymentItem == null || selectedPaymentItem.payAccountName == ""){
+            return;
+        }
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("DELETE FROM " + TABLE_PAYMENTS + " WHERE "
+                + COLUMN_PAY_ACCOUNT + "=\"" +
+                selectedPaymentItem.payAccountName+ "\";");
+        db.close();
+
+        //reset global variables
+        confirmedToDelete = false;
+        selectedPaymentItem = null;
+        selectPaymentItemIndex = -1;
+
+        updatePaymentListView();
     }
 }

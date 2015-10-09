@@ -30,6 +30,8 @@ import java.util.ArrayList;
 public class ItemDetailFragment extends Fragment {
 
 
+    public static ListView accountListView;
+    public static ListView paymentListView;
 
     /**
      * The fragment argument representing the item ID that this fragment
@@ -70,14 +72,15 @@ public class ItemDetailFragment extends Fragment {
         if (mItem != null) {
             if(mItem.item_name == "Account") {
                 rootView = inflater.inflate(R.layout.fragment_account_list, container, false);
-                ItemListActivity.accountListView = (ListView) rootView.findViewById(R.id.accountListView);
-                ItemListActivity.accountListView.setAdapter(MyData.accountListAdapter);
+                accountListView = (ListView) rootView.findViewById(R.id.accountListView);
+                accountListView.setAdapter(MyData.accountListAdapter);
                 registerAccountListViewItemClicked();
             }
             if(mItem.item_name == "Payment List"){
                 rootView = inflater.inflate(R.layout.fragment_payment_list, container, false);
-                ItemListActivity.paymentListView = (ListView) rootView.findViewById(R.id.paymentListView);
-                ItemListActivity.paymentListView.setAdapter(MyData.paymentListAdapter);
+                paymentListView = (ListView) rootView.findViewById(R.id.paymentListView);
+                paymentListView.setAdapter(MyData.paymentListAdapter);
+                registerPaymentListViewItemClicked();
             }
 
         }
@@ -85,23 +88,44 @@ public class ItemDetailFragment extends Fragment {
     }
 
     public void registerAccountListViewItemClicked(){
-        ItemListActivity.accountListView.setOnItemLongClickListener(
-                new AdapterView.OnItemLongClickListener(){
+        accountListView.setOnItemLongClickListener(
+                new AdapterView.OnItemLongClickListener() {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> parent,
                                                    View view, int position, long id) {
-                        if(position == MyData.accountList.size()-1){
+                        if (position == MyData.accountList.size() - 1) {
                             Toast.makeText(getActivity(),
                                     "This item cannot be deleted or edited", Toast.LENGTH_LONG).show();
                             return true;
                         }
-                        MyData.myData.selectAccountIndex = position;
-                        MyData.myData.selectedAccount = MyData.getMyAccountFromString(
+                        MyData.selectAccountIndex = position;
+                        MyData.selectedAccount = MyData.getMyAccountFromString(
                                 MyData.accountList.get(position));
                         startActivity(new Intent(getActivity(),
                                 EditOrDeleteAccountActivity.class));
 //                        Toast.makeText(getActivity(),
 //                                MyData.accountList.get(position) + " is Clicked", Toast.LENGTH_LONG).show();
+                        return true;
+                    }
+                });
+    }
+
+    public void registerPaymentListViewItemClicked(){
+        paymentListView.setOnItemLongClickListener(
+                new AdapterView.OnItemLongClickListener() {
+                    @Override
+                    public boolean onItemLongClick(AdapterView<?> parent,
+                                                   View view, int position, long id) {
+                        if (position == MyData.paymentList.size() - 1) {
+                            Toast.makeText(getActivity(),
+                                    "This item cannot be deleted or edited", Toast.LENGTH_LONG).show();
+                            return true;
+                        }
+                        MyData.selectPaymentItemIndex = position;
+                        MyData.selectedPaymentItem = MyData.getMyPaymentItemFromString(
+                                MyData.paymentList.get(position));
+                        startActivity(new Intent(getActivity(),
+                                EditOrDeletePaymentActivity.class));
                         return true;
                     }
                 });

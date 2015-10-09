@@ -33,8 +33,6 @@ import android.widget.Toast;
 public class ItemListActivity extends FragmentActivity
         implements ItemListFragment.Callbacks {
 
-    public static ListView accountListView;
-    public static ListView paymentListView;
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.

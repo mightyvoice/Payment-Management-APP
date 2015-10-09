@@ -23,4 +23,9 @@ public class MyLib {
         Calendar cal = Calendar.getInstance();
         return dateFormat.format(cal.getTime()); //2014/08/06 16:00:22
     }
+
+    public static Double roundTo2DecimalPoints(Double x){
+        Double ans = Math.round(x.doubleValue()*100)/100.00;
+        return ans;
+    }
 }
