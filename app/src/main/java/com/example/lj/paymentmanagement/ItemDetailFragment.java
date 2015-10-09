@@ -1,11 +1,13 @@
 
 package com.example.lj.paymentmanagement;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -26,6 +28,7 @@ import java.util.ArrayList;
  * on handsets.
  */
 public class ItemDetailFragment extends Fragment {
+
 
 
     /**
@@ -67,25 +70,41 @@ public class ItemDetailFragment extends Fragment {
         if (mItem != null) {
             if(mItem.item_name == "Account") {
                 rootView = inflater.inflate(R.layout.fragment_account_list, container, false);
-                showAccounts(rootView);
+                ItemListActivity.accountListView = (ListView) rootView.findViewById(R.id.accountListView);
+                ItemListActivity.accountListView.setAdapter(MyData.accountListAdapter);
+                registerAccountListViewItemClicked();
             }
             if(mItem.item_name == "Payment List"){
                 rootView = inflater.inflate(R.layout.fragment_payment_list, container, false);
-                showPayments(rootView);
+                ItemListActivity.paymentListView = (ListView) rootView.findViewById(R.id.paymentListView);
+                ItemListActivity.paymentListView.setAdapter(MyData.paymentListAdapter);
             }
 
         }
         return rootView;
     }
 
-    private void showAccounts(View rootView){
-        ListView accountListView = (ListView) rootView.findViewById(R.id.accountListView);
-        accountListView.setAdapter(MyData.accountListAdapter);
-    }
-
-    private void showPayments(View rootView){
-        ListView paymentListView = (ListView) rootView.findViewById(R.id.paymentListView);
-        paymentListView.setAdapter(MyData.paymentListAdapter);
+    public void registerAccountListViewItemClicked(){
+        ItemListActivity.accountListView.setOnItemLongClickListener(
+                new AdapterView.OnItemLongClickListener(){
+                    @Override
+                    public boolean onItemLongClick(AdapterView<?> parent,
+                                                   View view, int position, long id) {
+                        MyData.clickedItemID = position;
+                        if(position == MyData.accountList.size()-1){
+                            Toast.makeText(getActivity(),
+                                    "This item cannot be deleted or edited", Toast.LENGTH_LONG).show();
+                            return true;
+                        }
+                        startActivity(new Intent(getActivity(), EditOrDeleteAccountActivity.class));
+//                        Toast.makeText(getActivity(),
+//                                MyData.accountList.get(position) + " is Clicked", Toast.LENGTH_LONG).show();
+                        if(MyData.confirmedToDelete && MyData.clickedItemID > -1){
+                            MyData.deleteAccountByCurrentIndex();
+                        }
+                        return true;
+                    }
+                });
     }
 
 }

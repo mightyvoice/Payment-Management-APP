@@ -5,9 +5,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.example.lj.paymentmanagement.AddAccountActivity"
-    android:background="#92ffdf"
-    android:onClick="addNewAccountButtonClicked">
+    tools:context="com.example.lj.paymentmanagement.EditOrDeleteAccountActivity"
+    android:background="#92ffdf">
 
     <TextView
         android:layout_width="wrap_content"
@@ -31,12 +30,11 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add"
+        android:text="Edit"
         android:id="@+id/editAccountButton"
-        android:onClick="addNewAccountButtonClicked"
-        android:layout_below="@+id/newAccountDueDayInput"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="86dp" />
+        android:onClick="editAccountButtonClicked"
+        android:layout_alignTop="@+id/deleteAccountButton"
+        android:layout_toStartOf="@+id/toPayInput" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -95,5 +93,14 @@
         android:layout_centerVertical="true"
         android:layout_alignStart="@+id/newAccountDueDayInput"
         android:layout_alignEnd="@+id/newAccountDueDayInput" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete"
+        android:id="@+id/deleteAccountButton"
+        android:onClick="deleteAccountButtonClicked"
+        android:layout_below="@+id/toPayLabel"
+        android:layout_alignEnd="@+id/toPayInput" />
 
 </RelativeLayout>

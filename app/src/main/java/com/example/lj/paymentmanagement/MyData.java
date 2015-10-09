@@ -18,18 +18,20 @@ import java.util.Date;
 public class MyData extends SQLiteOpenHelper{
 
     public static ArrayList<String> accountList = new ArrayList<String>();
-
-    public static ArrayList<String> paymentList = new ArrayList<String>();
-
     public static ArrayAdapter<String> accountListAdapter;
 
+    public static ArrayList<String> paymentList = new ArrayList<String>();
     public static ArrayAdapter<String> paymentListAdapter;
+
+    public static boolean confirmedToDelete = false;
+
+    public static Integer clickedItemID = -1;
 
     //database information
     private static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "myAccountsAndPayments.db";
 
-    //for the account table
+    //column names for the account table
     public static final String TABLE_ACCOUNTS = "myAccounts";
     public static final String COLUMN_ACCOUNT_ID = "_id";
     public static final String COLUMN_ACCOUNT_NAME = "accountName";
@@ -37,7 +39,7 @@ public class MyData extends SQLiteOpenHelper{
     public static final String COLUMN_ACCOUNT_DUEDAY = "accountDueDay";
     public static final String COLUMN_ACCOUNT_TOPAY = "accountToPay";
 
-    //for the payment table
+    //column names for the payment table
     public static final String TABLE_PAYMENTS = "myPayments";
     public static final String COLUMN_PAYMENT_ID = "_id";
     public static final String COLUMN_PAY_ACCOUNT = "payAccount";
@@ -45,7 +47,6 @@ public class MyData extends SQLiteOpenHelper{
     public static final String COLUMN_PAY_AMOUNT = "payAmount";
     public static final String COLUMN_PAY_DATE = "payDate";
     public static final String COLUMN_PAY_TOTAL_THIS_MONTH = "payTotalThisMonth";
-
 
     public MyData(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
@@ -247,7 +248,7 @@ public class MyData extends SQLiteOpenHelper{
         return totalBalance;
     }
 
-    public Double getCurrentTotalBalanceNeedToPay(){
+    private Double getCurrentTotalBalanceNeedToPay(){
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT * FROM " + TABLE_ACCOUNTS + ";";
         Cursor cursor = db.rawQuery(query, null);
@@ -260,5 +261,10 @@ public class MyData extends SQLiteOpenHelper{
         }
         db.close();
         return totalToPayBalance;
+    }
+
+    public static void deleteAccountByCurrentIndex(){
+        accountList.remove(clickedItemID);
+        accountListAdapter.notifyDataSetChanged();
     }
 }

@@ -4,8 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
+
+/**
+ * The main entrance of the whole app
+ */
 
 
 /**
@@ -27,12 +33,14 @@ import android.widget.Toast;
 public class ItemListActivity extends FragmentActivity
         implements ItemListFragment.Callbacks {
 
+    public static ListView accountListView;
+    public static ListView paymentListView;
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
      */
     private boolean mTwoPane;
-    MyData myData;
+    static MyData myData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,10 +66,11 @@ public class ItemListActivity extends FragmentActivity
         myData = new MyData(this, null, null, 1);
         myData.accountListAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, MyData.accountList);
-        myData.updateAccountListView();
         myData.paymentListAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, MyData.paymentList);
+        myData.updateAccountListView();
         myData.updatePaymentListView();
+//
     }
 
     /**
@@ -125,5 +134,6 @@ public class ItemListActivity extends FragmentActivity
             }
         }
     }
+
 
 }
