@@ -75,12 +75,14 @@ public class ItemDetailFragment extends Fragment {
                 accountListView = (ListView) rootView.findViewById(R.id.accountListView);
                 accountListView.setAdapter(MyData.accountListAdapter);
                 registerAccountListViewItemClicked();
+                MyData.myData.updateAccountListView();
             }
             if(mItem.item_name == "Payment List"){
                 rootView = inflater.inflate(R.layout.fragment_payment_list, container, false);
                 paymentListView = (ListView) rootView.findViewById(R.id.paymentListView);
                 paymentListView.setAdapter(MyData.paymentListAdapter);
                 registerPaymentListViewItemClicked();
+                MyData.myData.updatePaymentListView();
             }
 
         }
@@ -123,6 +125,8 @@ public class ItemDetailFragment extends Fragment {
                         }
                         MyData.selectPaymentItemIndex = position;
                         MyData.selectedPaymentItem = MyPaymentItem.getMyPaymentItemFromString(
+                                MyData.paymentList.get(position));
+                        MyData.editPaymentItem = MyPaymentItem.getMyPaymentItemFromString(
                                 MyData.paymentList.get(position));
                         startActivity(new Intent(getActivity(),
                                 EditOrDeletePaymentActivity.class));

@@ -1,5 +1,7 @@
 package com.example.lj.paymentmanagement;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
@@ -49,6 +51,20 @@ public class AddPaymentActivity extends ActionBarActivity {
             Double.parseDouble(amount);
         }catch (Exception e){
             payAmountInput.setText("0");
+        }
+
+        //the the pay account does not exist do and payment
+        if(!MyData.myData.ifAccountNameAlreadyExist(
+                payAccountNameInput.getText().toString())){
+            new AlertDialog.Builder(this).setTitle("Error")
+                    .setMessage("The pay account does not exist")
+                    .setNegativeButton("Return", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    return;
+                }
+            }).show();
+            return;
         }
 
         String allInput = payAccountNameInput.getText().toString() + ",    " +

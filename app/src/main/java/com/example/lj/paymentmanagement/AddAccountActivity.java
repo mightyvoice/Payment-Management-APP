@@ -11,9 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
-
-import java.util.Locale;
 
 public class AddAccountActivity extends ActionBarActivity {
 
@@ -42,8 +39,8 @@ public class AddAccountActivity extends ActionBarActivity {
     public void addNewAccountButtonClicked(View view){
         newAccountNameInput = (EditText)findViewById(R.id.payAccountNameInput);
         newAccountBankInput = (EditText)findViewById(R.id.paidAccountNameInput);
-        newAccountDueDayInput = (EditText)findViewById(R.id.newAccountDueDayInput);
-        newAccountToPayInput = (EditText)findViewById(R.id.toPayInput);
+        newAccountDueDayInput = (EditText)findViewById(R.id.editAccountDueDayInput);
+        newAccountToPayInput = (EditText)findViewById(R.id.editAccountToPayInput);
 
 //        newAccountNameInput.setText("Freedom");
 //        newAccountBankInput.setText("BoA");

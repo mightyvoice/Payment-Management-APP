@@ -15,6 +15,8 @@ public class MyPaymentItem {
     public boolean ifArrived = false;
     public Double totalPayAmountThisMonth;
 
+    public MyPaymentItem(){}
+
     public MyPaymentItem(String payAccountName, String paidAccountName,
                          Double payAmount, String payDate){
         this.payAccountName = payAccountName;

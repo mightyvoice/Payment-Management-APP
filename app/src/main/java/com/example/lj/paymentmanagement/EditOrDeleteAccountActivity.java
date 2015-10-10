@@ -2,8 +2,6 @@ package com.example.lj.paymentmanagement;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -16,10 +14,10 @@ import android.widget.Toast;
 
 public class EditOrDeleteAccountActivity extends ActionBarActivity {
 
-    public EditText newAccountNameInput;
-    public EditText newAccountBankInput;
-    public EditText newAccountDueDayInput;
-    public EditText newAccountToPayInput;
+    public EditText editAccountName;
+    public EditText editAccountBank;
+    public EditText editAccountDueDay;
+    public EditText editAccountToPay;
     public Button editAccountButton;
     public Button deleteAccountButton;
 
@@ -36,34 +34,54 @@ public class EditOrDeleteAccountActivity extends ActionBarActivity {
 
         getWindow().setLayout((int) (width * 0.6), (int) (height * 0.7));
 
-        newAccountNameInput = (EditText) findViewById(R.id.payAccountNameInput);
-        newAccountBankInput = (EditText) findViewById(R.id.paidAccountNameInput);
-        newAccountDueDayInput = (EditText) findViewById(R.id.newAccountDueDayInput);
-        newAccountToPayInput = (EditText) findViewById(R.id.toPayInput);
+        editAccountName = (EditText) findViewById(R.id.editAccountNameInput);
+        editAccountBank = (EditText) findViewById(R.id.editAccountBankInput);
+        editAccountDueDay = (EditText) findViewById(R.id.editAccountDueDayInput);
+        editAccountToPay = (EditText) findViewById(R.id.editAccountToPayInput);
 
-        newAccountNameInput.setText(MyData.selectedAccount.accountName);
-        newAccountBankInput.setText(MyData.selectedAccount.bankName);
-        newAccountDueDayInput.setText(MyData.selectedAccount.dueDay.toString());
-        newAccountToPayInput.setText(MyData.selectedAccount.toPayBalance.toString());
+        editAccountName.setText(MyData.selectedAccount.accountName);
+        editAccountBank.setText(MyData.selectedAccount.bankName);
+        editAccountDueDay.setText(MyData.selectedAccount.dueDay.toString());
+        editAccountToPay.setText(MyData.myData.getAccountStatementBalance(MyData.selectedAccount.accountName).toString());
+
+//        editAccountName.setEnabled(false);
 
     }
 
-    public void editAccountButtonClicked(View view) {
-//        newAccountNameInput = (EditText) view.findViewById(R.id.payAccountNameInput);
-//        newAccountBankInput = (EditText) view.findViewById(R.id.paidAccountNameInput);
-//        newAccountDueDayInput = (EditText) view.findViewById(R.id.newAccountDueDayInput);
-//        newAccountToPayInput = (EditText) view.findViewById(R.id.toPayInput);
-//
-////        newAccountNameInput.setText("Freedom");
-////        newAccountBankInput.setText("BoA");
-//
-//        String allInput = newAccountNameInput.getText().toString() + ",    " +
-//                newAccountBankInput.getText().toString() + ",   " +
-//                newAccountDueDayInput.getText().toString() + ",   " +
-//                newAccountToPayInput.getText().toString();
-//        Intent data = new Intent();
-//        data.setData(Uri.parse(allInput));
-//        setResult(RESULT_OK, data);
+    public void changeAccountButtonClicked(View view) {
+
+        MyData.editAccount = new MyAccount();
+        MyData.editAccount.accountName = editAccountName.getText().toString();
+        MyData.editAccount.bankName = editAccountBank.getText().toString();
+        MyData.editAccount.dueDay = Integer.parseInt(
+                editAccountDueDay.getText().toString());
+        MyData.editAccount.toPayBalance = Double.parseDouble(
+                editAccountToPay.getText().toString());
+
+        new AlertDialog.Builder(this).setTitle("Confirm Change")
+                .setMessage("Confirm to change the Account: \n"+
+                        MyData.selectedAccount.accountName + " of " +
+                        MyData.selectedAccount.bankName+" whose due day is " +
+                        MyData.selectedAccount.dueDay.toString() + " and to pay balance is " +
+                        MyData.selectedAccount.toPayBalance.toString() + "\nto " +
+                        "New account: \n" +
+                        MyData.editAccount.accountName + " of " +
+                        MyData.editAccount.bankName+" whose due day is " +
+                        MyData.editAccount.dueDay.toString() + " and to pay balance is " +
+                        MyData.editAccount.toPayBalance.toString())
+                .setPositiveButton("Change", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (MyData.selectAccountIndex > -1) {
+                            MyData.myData.changeSelectedAccount();
+                        }
+                        finish();
+                    }
+                }).setNegativeButton("Return", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        }).show();
     }
 
     public void deleteAccountButtonClicked(View view) {
@@ -88,6 +106,7 @@ public class EditOrDeleteAccountActivity extends ActionBarActivity {
                     }
                 }).show();
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

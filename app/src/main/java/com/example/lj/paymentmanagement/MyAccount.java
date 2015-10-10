@@ -37,12 +37,12 @@ public class MyAccount {
         this.toPayBalance = toPayBalance;
     }
 
-    public String toString(){
-        return this.accountName + ", " + this.bankName + ", " +
-                this.statementBalance.toString() + ", "+
-                this.currentBalance.toString() + ", "+
-                this.toPayBalance.toString();
-    }
+//    public String toString(){
+//        return this.accountName + ", " + this.bankName + ", " +
+//                this.statementBalance.toString() + ", "+
+//                this.currentBalance.toString() + ", "+
+//                this.toPayBalance.toString();
+//    }
 
 
     public static MyAccount getMyAccountFromString(String data){

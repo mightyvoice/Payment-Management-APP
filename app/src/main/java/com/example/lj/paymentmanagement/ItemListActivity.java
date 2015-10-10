@@ -128,7 +128,6 @@ public class ItemListActivity extends FragmentActivity
 
                 //update the toPayBalance of the account
                 String[] tmp1 = tmp.split(",");
-                MyData.myData.updateAccountToPayBalance(tmp1[0], Double.parseDouble(tmp1[2]));
             }
         }
     }

@@ -44,7 +44,7 @@ public class EditOrDeletePaymentActivity extends ActionBarActivity {
 
     public void deletePaymentButtonClicked(View view){
         Toast.makeText(this, "delete button clicked", Toast.LENGTH_LONG).show();
-        new AlertDialog.Builder(this).setTitle("Confirm")
+        new AlertDialog.Builder(this).setTitle("Confirm Delete")
                 .setMessage("Confirm to delete the payment to: "+
                         MyData.selectedPaymentItem.payAccountName+" on " +
                         MyData.selectedPaymentItem.payDate + " of $" +
@@ -67,6 +67,40 @@ public class EditOrDeletePaymentActivity extends ActionBarActivity {
     }
 
     public void changePaymentButtonClicked(View view){
+        paidAccountNameInput = (EditText) findViewById(R.id.paidAccountNameInput);
+        payAccountNameInput = (EditText) findViewById(R.id.payAccountNameInput);
+        payAmountInput = (EditText) findViewById(R.id.payAmountInput);
+        payDateInput = (EditText) findViewById(R.id.payDateInput);
+
+        MyData.editPaymentItem = new MyPaymentItem();
+        MyData.editPaymentItem.payAccountName = payAccountNameInput.getText().toString();
+        MyData.editPaymentItem.paidAccountName = paidAccountNameInput.getText().toString();
+        MyData.editPaymentItem.payAmount = Double.parseDouble(payAmountInput.getText().toString());
+        MyData.editPaymentItem.payDate = payDateInput.getText().toString();
+
+        new AlertDialog.Builder(this).setTitle("Confirm Change")
+                .setMessage("Confirm to change the payment : $"+
+                        MyData.selectedPaymentItem.payAmount.toString() + " to " +
+                        MyData.selectedPaymentItem.payAccountName+" from " +
+                        MyData.selectedPaymentItem.paidAccountName + " on " +
+                        MyData.selectedPaymentItem.payDate + " to\n " +
+                        "New payment: $" + MyData.editPaymentItem.payAmount.toString() + " to "+
+                        MyData.editPaymentItem.payAccountName + " from " +
+                        MyData.editPaymentItem.paidAccountName + " on " +
+                        MyData.editPaymentItem.payDate)
+                .setPositiveButton("Change", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(MyData.selectPaymentItemIndex > -1){
+                            MyData.myData.changeSelectedPaymentItem();
+                        }
+                        finish();
+                    }
+                }).setNegativeButton("Return", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        }).show();
 
     }
 

@@ -58,7 +58,7 @@ android:background="#92ffdf">
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text="Pay Amount"
-    android:id="@+id/payAmountLabel"
+    android:id="@+id/editDueDayLabel"
     android:textSize="20dp"
     android:layout_marginTop="31dp"
     android:layout_below="@+id/paidAccountNameInput"
@@ -70,7 +70,7 @@ android:background="#92ffdf">
     android:inputType="numberDecimal"
     android:ems="10"
     android:id="@+id/payAmountInput"
-    android:layout_alignBottom="@+id/payAmountLabel"
+    android:layout_alignBottom="@+id/editDueDayLabel"
     android:layout_alignParentEnd="true" />
 
 <TextView
