@@ -107,28 +107,6 @@ public class MyData extends SQLiteOpenHelper{
         updateAccountListView();
     }
 
-//    public Double updateAccountToPayBalance(String accountName, Double paidAmount){
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        String query = "SELECT * FROM " + TABLE_ACCOUNTS + " WHERE " +
-//                COLUMN_ACCOUNT_NAME + "=\"" + accountName +"\";";
-//        Cursor cursor = db.rawQuery(query, null);
-//        cursor.moveToFirst();
-//        Double statementBalance = 0.0;
-//        if(!cursor.isAfterLast() && cursor.getString(cursor.getColumnIndex(COLUMN_ACCOUNT_NAME))
-//                != null){
-//            statementBalance = cursor.getDouble(
-//                    cursor.getColumnIndex(COLUMN_ACCOUNT_TOPAY));
-//        }
-//        Double newBalance = statementBalance - getAccountAlreadyPaidAmount(accountName);
-//        query = "UPDATE "+TABLE_ACCOUNTS+" SET " +
-//                COLUMN_ACCOUNT_TOPAY + "=" + newBalance.toString() +
-//                " WHERE " + COLUMN_ACCOUNT_NAME + "=\"" + accountName+"\";";
-//        db.execSQL(query);
-//        db.close();
-//        updateAccountListView();
-//        return newBalance;
-//    }
-
     public void updateAccountListView(){
         accountList.clear();
         SQLiteDatabase db = this.getWritableDatabase();
@@ -144,9 +122,8 @@ public class MyData extends SQLiteOpenHelper{
                         cursor.getColumnIndex(COLUMN_ACCOUNT_BANK))+",    ";
                 tmp += cursor.getString(
                         cursor.getColumnIndex(COLUMN_ACCOUNT_DUEDAY)) + ",   $";
-                tmp += (new Double(cursor.getDouble(
-                        cursor.getColumnIndex(COLUMN_ACCOUNT_TOPAY)) -
-                        getAccountAlreadyPaidAmount(accountName)).toString());
+                tmp += new Double(getAccountStatementBalance(accountName) -
+                        getAccountAlreadyPaidAmount(accountName)).toString();
                 accountList.add(tmp);
             }
             cursor.moveToNext();
@@ -228,7 +205,7 @@ public class MyData extends SQLiteOpenHelper{
                 " WHERE " + COLUMN_ACCOUNT_NAME + "=\"" + accountName + "\"";
         Cursor cursor = db.rawQuery(query, null);
         cursor.moveToFirst();
-        Double statementBalance = 0.0;
+        double statementBalance = 0.0;
         while(!cursor.isAfterLast()){
             statementBalance += cursor.getDouble(
                     cursor.getColumnIndex(COLUMN_ACCOUNT_TOPAY));
@@ -289,13 +266,19 @@ public class MyData extends SQLiteOpenHelper{
             return;
         }
         SQLiteDatabase db = getWritableDatabase();
-        db.execSQL("DELETE FROM " + TABLE_ACCOUNTS + " WHERE "
-                + COLUMN_ACCOUNT_NAME + "=\"" + selectedAccount.accountName + "\" AND " +
-                COLUMN_ACCOUNT_BANK + "=\"" + selectedAccount.bankName + "\";");
-        db.execSQL("DELETE FROM " + TABLE_PAYMENTS + " WHERE "
+//        String query = "DELETE FROM " + TABLE_ACCOUNTS + " WHERE "
+//                + COLUMN_ACCOUNT_NAME + "=\"" + selectedAccount.accountName +// "\" AND " +
+//                COLUMN_ACCOUNT_BANK + "=\"" + selectedAccount.bankName + "\";";
+        String query = "DELETE FROM " + TABLE_ACCOUNTS + " WHERE "
+                + COLUMN_ACCOUNT_NAME + "=\"" + selectedAccount.accountName + "\"";
+        db.execSQL(query);
+        query = "DELETE  FROM " + TABLE_PAYMENTS + " WHERE "
                 + COLUMN_PAY_ACCOUNT + "=\"" +
-                selectedAccount.accountName +"\";");
+                selectedAccount.accountName +"\";";
+        db.execSQL(query);
         db.close();
+
+        Double tmp = getAccountStatementBalance(selectedAccount.accountName);
 
         //reset global variables
         confirmedToDelete = false;
@@ -345,10 +328,6 @@ public class MyData extends SQLiteOpenHelper{
         db.close();
 
         updatePaymentListView();
-        //if the paid amount changed, the change the to pay balance
-        //of the pay account
-        String tmp1 = selectedPaymentItem.payAccountName;
-        String tmp2 = editPaymentItem.payAccountName;
     }
 
     public void changeSelectedAccount(){
@@ -369,12 +348,13 @@ public class MyData extends SQLiteOpenHelper{
                 COLUMN_ACCOUNT_NAME + "=\"" + editAccount.accountName + "\", "+
                 COLUMN_ACCOUNT_BANK + "=\"" + editAccount.bankName + "\", "+
                 COLUMN_ACCOUNT_TOPAY + "=" + editAccount.toPayBalance.toString() + ", " +
-                COLUMN_ACCOUNT_DUEDAY + "=\"" + editAccount.dueDay.toString() + "\" " +
+                COLUMN_ACCOUNT_DUEDAY + "=" + editAccount.dueDay.toString() +
                 " WHERE " +
-                COLUMN_ACCOUNT_NAME + "=\"" + selectedAccount.accountName+"\" AND " +
+                COLUMN_ACCOUNT_NAME + "=\"" + selectedAccount.accountName +"\" AND " +
                 COLUMN_ACCOUNT_BANK + "=\"" + selectedAccount.bankName + "\"";
         db.execSQL(query);
         db.close();
+
         updateAccountListView();
     }
 

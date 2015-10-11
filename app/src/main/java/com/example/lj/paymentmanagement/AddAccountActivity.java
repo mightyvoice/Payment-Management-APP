@@ -45,9 +45,9 @@ public class AddAccountActivity extends ActionBarActivity {
 //        newAccountNameInput.setText("Freedom");
 //        newAccountBankInput.setText("BoA");
 
-        String allInput = newAccountNameInput.getText().toString() + ",    " +
-                newAccountBankInput.getText().toString() + ",   " +
-                newAccountDueDayInput.getText().toString()+",   " +
+        String allInput = newAccountNameInput.getText().toString() + "," +
+                newAccountBankInput.getText().toString() + "," +
+                newAccountDueDayInput.getText().toString()+"," +
                 newAccountToPayInput.getText().toString();
         Intent data = new Intent();
         data.setData(Uri.parse(allInput));

@@ -32,7 +32,7 @@ public class MyAccount {
         this.accountName = accountName;
         this.bankName = bankName;
         this.dueDay = dueDay;
-        this.statementBalance = 0.0;
+        this.statementBalance = toPayBalance;
         this.currentBalance = 0.0;
         this.toPayBalance = toPayBalance;
     }
@@ -50,10 +50,13 @@ public class MyAccount {
         if(l[3].indexOf("$") > -1){
             l[3] = MyLib.cutFirstChar(l[3]);
         }
-        MyAccount ans = new MyAccount(l[0].replaceAll(" ", ""),
-                l[1].replaceAll(" ", ""),
-                MyLib.stringToInteger(l[2]),
-                Double.parseDouble(l[3]));
+
+        Double stateBalance = new Double(Double.parseDouble(l[3].trim()));
+        double tmp = Double.parseDouble(l[3].trim());
+        MyAccount ans = new MyAccount(l[0].trim(),
+                l[1].trim(),
+                MyLib.stringToInteger(l[2].trim()),
+                stateBalance);
         return ans;
     }
 

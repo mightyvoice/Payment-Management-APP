@@ -40,10 +40,10 @@ public class MyPaymentItem {
         if(l[2].indexOf("$") > -1){
             l[2] = MyLib.cutFirstChar(l[2]);
         }
-        MyPaymentItem ans = new MyPaymentItem(l[0].replaceAll(" ", ""),
-                l[1].replaceAll(" ", ""),
-                Double.parseDouble(l[2]),
-                l[3].replaceAll(" ", ""));
+        MyPaymentItem ans = new MyPaymentItem(l[0].trim(),
+                l[1].trim(),
+                Double.parseDouble(l[2].trim()),
+                l[3].trim());
         return ans;
     }
 }

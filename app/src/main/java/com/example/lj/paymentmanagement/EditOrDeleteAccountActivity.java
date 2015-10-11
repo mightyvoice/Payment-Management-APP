@@ -42,6 +42,7 @@ public class EditOrDeleteAccountActivity extends ActionBarActivity {
         editAccountName.setText(MyData.selectedAccount.accountName);
         editAccountBank.setText(MyData.selectedAccount.bankName);
         editAccountDueDay.setText(MyData.selectedAccount.dueDay.toString());
+        Double tmp = MyData.myData.getAccountStatementBalance(MyData.selectedAccount.accountName);
         editAccountToPay.setText(MyData.myData.getAccountStatementBalance(MyData.selectedAccount.accountName).toString());
 
 //        editAccountName.setEnabled(false);
@@ -85,7 +86,7 @@ public class EditOrDeleteAccountActivity extends ActionBarActivity {
     }
 
     public void deleteAccountButtonClicked(View view) {
-        Toast.makeText(this, "delete button clicked", Toast.LENGTH_LONG).show();
+//        Toast.makeText(this, "delete button clicked", Toast.LENGTH_LONG).show();
         new AlertDialog.Builder(this).setTitle("Confirm")
                 .setMessage("Confirm to delete the account: "+
                 MyData.selectedAccount.accountName+" from " +

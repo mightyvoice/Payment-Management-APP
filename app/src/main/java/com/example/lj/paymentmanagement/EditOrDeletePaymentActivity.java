@@ -43,7 +43,7 @@ public class EditOrDeletePaymentActivity extends ActionBarActivity {
     }
 
     public void deletePaymentButtonClicked(View view){
-        Toast.makeText(this, "delete button clicked", Toast.LENGTH_LONG).show();
+//        Toast.makeText(this, "delete button clicked", Toast.LENGTH_LONG).show();
         new AlertDialog.Builder(this).setTitle("Confirm Delete")
                 .setMessage("Confirm to delete the payment to: "+
                         MyData.selectedPaymentItem.payAccountName+" on " +
