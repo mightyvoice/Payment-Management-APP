@@ -28,10 +28,9 @@ public class MyPaymentItem {
 
     public String toString(){
         return payAccountName + ",  " +
-                paidAccountName + ",  " +
-                payAmount.toString() + ",  "+
-                totalPayAmountThisMonth.toString();
-
+                paidAccountName + ",  $" +
+                payAmount.toString() + ",  " +
+                payDate;
     }
 
     public static MyPaymentItem getMyPaymentItemFromString(String data){

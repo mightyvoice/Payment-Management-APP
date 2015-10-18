@@ -40,6 +40,18 @@ public class ItemListActivity extends FragmentActivity
     private boolean mTwoPane;
 //    static MyData myData;
 
+    private void initDataseAndView(){
+        //init database
+//        this.deleteDatabase(MyData.DATABASE_NAME);
+        MyData.myData = new MyData(this, null, null, 1);
+        MyData.accountListAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, MyData.accountList);
+        MyData.paymentListAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, MyData.paymentList);
+        MyData.myData.updateAccountListView();
+        MyData.myData.updatePaymentListView();
+
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,15 +71,8 @@ public class ItemListActivity extends FragmentActivity
                     .setActivateOnItemClick(true);
         }
 
-        //init database
-//        this.deleteDatabase(myData.DATABASE_NAME);
-        MyData.myData = new MyData(this, null, null, 1);
-        MyData.myData.accountListAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, MyData.accountList);
-        MyData.myData.paymentListAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, MyData.paymentList);
-        MyData.myData.updateAccountListView();
-        MyData.myData.updatePaymentListView();
+        initDataseAndView();
+
 //
     }
 
@@ -98,39 +103,12 @@ public class ItemListActivity extends FragmentActivity
         }
     }
 
-    private int newAccountRequestCode = 1;
     public void addAccountButtonClicked(View view){
-        startActivityForResult(new Intent(this, AddAccountActivity.class), newAccountRequestCode);
+        startActivity(new Intent(this, AddAccountActivity.class));
     }
 
-    private int newPaymentRequestCode = 2;
     public void addPaymentButtonClicked(View view){
-        startActivityForResult(new Intent(this, AddPaymentActivity.class), newPaymentRequestCode);
+        startActivity(new Intent(this, AddPaymentActivity.class));
     }
-
-    public void onActivityResult(int requestCode, int resultCode, Intent data){
-        if(requestCode == newAccountRequestCode){
-            if(resultCode == RESULT_OK){
-                String tmp = data.getData().toString();
-                Toast.makeText(this, tmp, Toast.LENGTH_LONG).show();
-                if(!MyData.myData.ifAccountAlreadyExist(tmp)) {
-                    MyData.myData.addAccountToDatabase(MyAccount.getMyAccountFromString(tmp));
-                }
-            }
-        }
-
-        if(requestCode == newPaymentRequestCode){
-            if(resultCode == RESULT_OK){
-                String tmp = data.getData().toString();
-                Toast.makeText(this, tmp, Toast.LENGTH_LONG).show();
-                MyData.myData.addPaymentToDatabase(
-                        MyPaymentItem.getMyPaymentItemFromString(tmp));
-
-                //update the toPayBalance of the account
-                String[] tmp1 = tmp.split(",");
-            }
-        }
-    }
-
 
 }

@@ -10,7 +10,12 @@ import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
+
+import java.util.ArrayList;
 
 public class AddPaymentActivity extends ActionBarActivity {
 
@@ -18,7 +23,12 @@ public class AddPaymentActivity extends ActionBarActivity {
     private EditText payAccountNameInput;
     private EditText payAmountInput;
     private EditText payDateInput;
+    private Spinner  payAccountSpinner;
 
+    private ArrayList<String> payAccountList = new ArrayList<String>();
+    private ArrayAdapter<String> payAccountSpinnerAdapter = null;
+
+    private String selectedAccountName = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,19 +43,36 @@ public class AddPaymentActivity extends ActionBarActivity {
 
         getWindow().setLayout((int) (width * 0.6), (int) (height * 0.7));
 
-        payAccountNameInput = (EditText)findViewById(R.id.payAccountNameInput);
-        paidAccountNameInput = (EditText)findViewById(R.id.paidAccountNameInput);
-        payAmountInput = (EditText)findViewById(R.id.payAmountInput);
-        payDateInput = (EditText)findViewById(R.id.payDateInput);
+        payAccountSpinner = (Spinner) findViewById(R.id.payAccountSpinner);
+        paidAccountNameInput = (EditText) findViewById(R.id.paidAccountNameInput);
+        payAmountInput = (EditText) findViewById(R.id.payAmountInput);
+        payDateInput = (EditText) findViewById(R.id.payDateInput);
 
         payDateInput.setText(MyLib.getCurrentDate());
+
+        initPayAccountSpinner();
+    }
+
+    public void initPayAccountSpinner(){
+        payAccountSpinnerAdapter = new ArrayAdapter<String>(
+                this, android.R.layout.simple_spinner_item, payAccountList);
+        payAccountSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        payAccountList.clear();
+        for(MyAccount account: MyData.allMyAccounts){
+            payAccountList.add(account.accountName);
+        }
+        payAccountSpinner.setAdapter(payAccountSpinnerAdapter);
+        payAccountSpinner.setVisibility(View.VISIBLE);
+        payAccountSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selectedAccountName = payAccountList.get(position);
+            }
+        });
     }
 
     public void addNewPaymentButtonClicked(View view){
 
-//        payAccountNameInput.setText("Freedom");
-//        paidAccountNameInput.setText("BoA");
-//        payAmountInput.setText("20");
         String amount = payAmountInput.getText().toString();
         try{
             Double.parseDouble(amount);
@@ -67,15 +94,15 @@ public class AddPaymentActivity extends ActionBarActivity {
             return;
         }
 
-        String allInput = payAccountNameInput.getText().toString() + ",    " +
-                paidAccountNameInput.getText().toString() + ",    " +
-                payAmountInput.getText().toString() + ",    "+
-                payDateInput.getText().toString();
-        Intent data = new Intent();
-        data.setData(Uri.parse(allInput));
-        setResult(RESULT_OK, data);
+        MyData.newPaymentItem = new MyPaymentItem(
+                selectedAccountName,
+                paidAccountNameInput.getText().toString(),
+                new Double(Double.parseDouble(payAmountInput.getText().toString())),
+                payDateInput.getText().toString()
+        );
 
-        //close the activity
+        MyData.myData.addPaymentToDatabase(MyData.newPaymentItem);
+
         finish();
     }
 

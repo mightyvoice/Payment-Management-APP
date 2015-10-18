@@ -35,4 +35,21 @@ public class MyLib {
         x = x.replace(" ", "");
         return x.substring(1);
     }
+
+    public static String getDateSuffix(Integer x){
+        String ans = x.toString();
+        if(x == 1){
+            ans += "st";
+        }
+        else if(x == 2){
+            ans += "nd";
+        }
+        else if(x == 3){
+            ans += "rd";
+        }
+        else{
+            ans += "th";
+        }
+        return ans;
+    }
 }

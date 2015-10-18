@@ -1,7 +1,5 @@
 package com.example.lj.paymentmanagement;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -40,43 +38,17 @@ public class AddAccountActivity extends ActionBarActivity {
         newAccountNameInput = (EditText)findViewById(R.id.payAccountNameInput);
         newAccountBankInput = (EditText)findViewById(R.id.paidAccountNameInput);
         newAccountDueDayInput = (EditText)findViewById(R.id.editAccountDueDayInput);
-        newAccountToPayInput = (EditText)findViewById(R.id.editAccountToPayInput);
+        newAccountToPayInput = (EditText)findViewById(R.id.editAccountStaBalanceInput);
 
-//        newAccountNameInput.setText("Freedom");
-//        newAccountBankInput.setText("BoA");
+        MyData.newAccount = new MyAccount(newAccountNameInput.getText().toString(),
+                newAccountBankInput.getText().toString(),
+                new Integer(Integer.parseInt(newAccountDueDayInput.getText().toString())),
+                new Double(Double.parseDouble(newAccountToPayInput.getText().toString())));
 
-        String allInput = newAccountNameInput.getText().toString() + "," +
-                newAccountBankInput.getText().toString() + "," +
-                newAccountDueDayInput.getText().toString()+"," +
-                newAccountToPayInput.getText().toString();
-        Intent data = new Intent();
-        data.setData(Uri.parse(allInput));
-        setResult(RESULT_OK, data);
+        MyData.myData.addAccountToDatabase(MyData.newAccount);
 
-//        String toSpeak = newAccountNameInput.getText().toString();
-//
-//        ttsObj = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener(){
-//            @Override
-//            public void onInit(int status) {
-//                if (status != TextToSpeech.ERROR) {
-//                    ttsObj.setLanguage(Locale.US);
-//                }
-//            }
-//        });
-//        ttsObj.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
-//        Toast.makeText(getApplicationContext(), toSpeak, Toast.LENGTH_SHORT).show();
-
-        //close the activity
         finish();
     }
-
-//    public void onPause(){
-//        if(ttsObj !=null){
-//            ttsObj.stop();
-//            ttsObj.shutdown();
-//        }
-//        super.onPause();
-//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

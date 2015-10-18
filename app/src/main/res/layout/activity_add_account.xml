@@ -74,7 +74,7 @@
         android:ems="10"
         android:id="@+id/editAccountDueDayInput"
         android:layout_alignBottom="@+id/editDueDayLabel"
-        android:layout_alignStart="@+id/editAccountToPayInput" />
+        android:layout_alignStart="@+id/editAccountStaBalanceInput" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -91,7 +91,7 @@
         android:layout_height="wrap_content"
         android:inputType="date"
         android:ems="10"
-        android:id="@+id/editAccountToPayInput"
+        android:id="@+id/editAccountStaBalanceInput"
         android:layout_alignTop="@+id/toPayLabel"
         android:layout_alignStart="@+id/editAccountButton" />
 

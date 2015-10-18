@@ -33,7 +33,7 @@
         android:id="@+id/changeAccountButton"
         android:onClick="changeAccountButtonClicked"
         android:layout_centerVertical="true"
-        android:layout_toStartOf="@+id/editAccountToPayInput" />
+        android:layout_toStartOf="@+id/editAccountStaBalanceInput" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -86,7 +86,7 @@
         android:layout_height="wrap_content"
         android:inputType="date"
         android:ems="10"
-        android:id="@+id/editAccountToPayInput"
+        android:id="@+id/editAccountStaBalanceInput"
         android:layout_alignTop="@+id/toPayLabel"
         android:layout_alignStart="@+id/editAccountDueDayInput" />
 

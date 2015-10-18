@@ -17,7 +17,7 @@ public class MyAccount {
     public Double statementBalance;
     public Double currentBalance;
     public Double toPayBalance;
-
+    public Double totalPayThisMonth;
     //Date
     public Integer dueDay;
     public Date statementDate;
@@ -28,29 +28,29 @@ public class MyAccount {
     public MyAccount(){}
 
     public MyAccount(String accountName, String bankName, Integer dueDay,
-                     Double toPayBalance){
+                     Double statementBalance){
         this.accountName = accountName;
         this.bankName = bankName;
         this.dueDay = dueDay;
-        this.statementBalance = toPayBalance;
-        this.currentBalance = 0.0;
-        this.toPayBalance = toPayBalance;
+        this.statementBalance = statementBalance;
+        this.toPayBalance = statementBalance;
+        this.totalPayThisMonth = 0.0;
     }
 
-//    public String toString(){
-//        return this.accountName + ", " + this.bankName + ", " +
-//                this.statementBalance.toString() + ", "+
-//                this.currentBalance.toString() + ", "+
-//                this.toPayBalance.toString();
-//    }
-
+    public String toString(){
+        String tmp = ",   ";
+        return this.accountName + tmp +
+                this.bankName + tmp +
+                MyLib.getDateSuffix(this.dueDay) + tmp + "$" +
+                this.toPayBalance.toString() + tmp +
+                this.statementBalance.toString();
+    }
 
     public static MyAccount getMyAccountFromString(String data){
         String[] l = data.split(",");
         if(l[3].indexOf("$") > -1){
             l[3] = MyLib.cutFirstChar(l[3]);
         }
-
         Double stateBalance = new Double(Double.parseDouble(l[3].trim()));
         double tmp = Double.parseDouble(l[3].trim());
         MyAccount ans = new MyAccount(l[0].trim(),
@@ -60,4 +60,12 @@ public class MyAccount {
         return ans;
     }
 
+    public void updateToPayBalance(){
+        if(this.statementBalance > this.totalPayThisMonth){
+            this.toPayBalance = this.statementBalance - this.totalPayThisMonth;
+        }
+        else{
+            this.toPayBalance = 0.0;
+        }
+    }
 }

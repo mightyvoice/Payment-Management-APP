@@ -10,14 +10,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 public class EditOrDeleteAccountActivity extends ActionBarActivity {
 
     public EditText editAccountName;
     public EditText editAccountBank;
     public EditText editAccountDueDay;
-    public EditText editAccountToPay;
+    public EditText editAccountStaBalance;
     public Button editAccountButton;
     public Button deleteAccountButton;
 
@@ -37,13 +36,12 @@ public class EditOrDeleteAccountActivity extends ActionBarActivity {
         editAccountName = (EditText) findViewById(R.id.editAccountNameInput);
         editAccountBank = (EditText) findViewById(R.id.editAccountBankInput);
         editAccountDueDay = (EditText) findViewById(R.id.editAccountDueDayInput);
-        editAccountToPay = (EditText) findViewById(R.id.editAccountToPayInput);
+        editAccountStaBalance = (EditText) findViewById(R.id.editAccountStaBalanceInput);
 
         editAccountName.setText(MyData.selectedAccount.accountName);
         editAccountBank.setText(MyData.selectedAccount.bankName);
         editAccountDueDay.setText(MyData.selectedAccount.dueDay.toString());
-        Double tmp = MyData.myData.getAccountStatementBalance(MyData.selectedAccount.accountName);
-        editAccountToPay.setText(MyData.myData.getAccountStatementBalance(MyData.selectedAccount.accountName).toString());
+        editAccountStaBalance.setText(MyData.selectedAccount.statementBalance.toString());
 
 //        editAccountName.setEnabled(false);
 
@@ -51,25 +49,22 @@ public class EditOrDeleteAccountActivity extends ActionBarActivity {
 
     public void changeAccountButtonClicked(View view) {
 
-        MyData.editAccount = new MyAccount();
-        MyData.editAccount.accountName = editAccountName.getText().toString();
-        MyData.editAccount.bankName = editAccountBank.getText().toString();
-        MyData.editAccount.dueDay = Integer.parseInt(
-                editAccountDueDay.getText().toString());
-        MyData.editAccount.toPayBalance = Double.parseDouble(
-                editAccountToPay.getText().toString());
+        MyData.editAccount = new MyAccount(editAccountName.getText().toString(),
+                                            editAccountBank.getText().toString(),
+                                            new Integer(Integer.parseInt(editAccountDueDay.getText().toString())),
+                                            new Double(Double.parseDouble(editAccountStaBalance.getText().toString())));
 
         new AlertDialog.Builder(this).setTitle("Confirm Change")
                 .setMessage("Confirm to change the Account: \n"+
                         MyData.selectedAccount.accountName + " of " +
                         MyData.selectedAccount.bankName+" whose due day is " +
-                        MyData.selectedAccount.dueDay.toString() + " and to pay balance is " +
-                        MyData.selectedAccount.toPayBalance.toString() + "\nto " +
+                        MyData.selectedAccount.dueDay.toString() + " and statement balance is " +
+                        MyData.selectedAccount.statementBalance.toString() + "\nto " +
                         "New account: \n" +
                         MyData.editAccount.accountName + " of " +
                         MyData.editAccount.bankName+" whose due day is " +
-                        MyData.editAccount.dueDay.toString() + " and to pay balance is " +
-                        MyData.editAccount.toPayBalance.toString())
+                        MyData.editAccount.dueDay.toString() + " and statement balance is " +
+                        MyData.editAccount.statementBalance.toString())
                 .setPositiveButton("Change", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
