@@ -1,6 +1,7 @@
 package com.example.lj.paymentmanagement;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -9,13 +10,18 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
+import android.widget.AdapterView.OnItemSelectedListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class AddPaymentActivity extends ActionBarActivity {
 
@@ -24,6 +30,12 @@ public class AddPaymentActivity extends ActionBarActivity {
     private EditText payAmountInput;
     private EditText payDateInput;
     private Spinner  payAccountSpinner;
+    private DatePicker payDatePicker;
+
+    private Integer payYear;
+    private Integer payMonth;
+    private Integer payDay;
+    private String payDateToString;
 
     private ArrayList<String> payAccountList = new ArrayList<String>();
     private ArrayAdapter<String> payAccountSpinnerAdapter = null;
@@ -48,30 +60,77 @@ public class AddPaymentActivity extends ActionBarActivity {
         payAmountInput = (EditText) findViewById(R.id.payAmountInput);
         payDateInput = (EditText) findViewById(R.id.payDateInput);
 
-        payDateInput.setText(MyLib.getCurrentDate());
-
         initPayAccountSpinner();
+        initPayDatePicker();
     }
 
-    public void initPayAccountSpinner(){
-        payAccountSpinnerAdapter = new ArrayAdapter<String>(
-                this, android.R.layout.simple_spinner_item, payAccountList);
-        payAccountSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        payAccountList.clear();
-        for(MyAccount account: MyData.allMyAccounts){
-            payAccountList.add(account.accountName);
-        }
-        payAccountSpinner.setAdapter(payAccountSpinnerAdapter);
-        payAccountSpinner.setVisibility(View.VISIBLE);
-        payAccountSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+    public void initPayDatePicker(){
+        Calendar c = Calendar.getInstance();
+        payYear = c.get(Calendar.YEAR);
+        payMonth = c.get(Calendar.MONTH)+1;
+        payDay = c.get(Calendar.DAY_OF_MONTH);
+        payDateToString = payYear+"/"+payMonth+"/"+payDay;
+        payDateInput.setText(payDateToString);
+
+//        payDateInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                if(hasFocus){
+//                    DatePickerDialog datePickerDialog = new DatePickerDialog(
+//                            AddPaymentActivity.this , payDateSet, payYear, payMonth-1, payDay);
+//                    datePickerDialog.show();
+//                }
+//            }
+//        });
+        payDateInput.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectedAccountName = payAccountList.get(position);
+            public boolean onTouch(View v, MotionEvent event) {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(
+                        AddPaymentActivity.this , payDateSet, payYear, payMonth-1, payDay);
+                datePickerDialog.show();
+                return true;
             }
         });
     }
 
-    public void addNewPaymentButtonClicked(View view){
+    DatePickerDialog.OnDateSetListener payDateSet =
+            new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear,
+                              int dayOfMonth) {
+                payYear = year;
+                payMonth = monthOfYear+1;
+                payDay = dayOfMonth;
+                payDateToString = payYear+"/"+payMonth+"/"+payDay;
+                payDateInput.setText(payDateToString);
+        }
+    };
+
+    public void initPayAccountSpinner(){
+
+        payAccountList.clear();
+        for(MyAccount account: MyData.allMyAccounts){
+            payAccountList.add(account.accountName + " from " + account.bankName);
+        }
+        payAccountSpinnerAdapter = new ArrayAdapter<String>(
+                this, android.R.layout.simple_spinner_item, payAccountList);
+        payAccountSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        payAccountSpinner.setAdapter(payAccountSpinnerAdapter);
+        payAccountSpinner.setVisibility(View.VISIBLE);
+        payAccountSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedAccountName = payAccountList.get(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    public void addPaymentButtonClicked(View view){
 
         String amount = payAmountInput.getText().toString();
         try{
@@ -80,25 +139,22 @@ public class AddPaymentActivity extends ActionBarActivity {
             payAmountInput.setText("0");
         }
 
-        //the the pay account does not exist do and payment
-        if(!MyData.myData.ifAccountNameAlreadyExist(
-                payAccountNameInput.getText().toString())){
-            new AlertDialog.Builder(this).setTitle("Error")
-                    .setMessage("The pay account does not exist")
+        if(payAmountInput.getText().toString() == "0"){
+            new AlertDialog.Builder(this).setTitle("Amount Error")
+                    .setMessage("Pay Amount Cannot Be $0")
                     .setNegativeButton("Return", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    return;
                 }
             }).show();
-            return;
         }
 
         MyData.newPaymentItem = new MyPaymentItem(
                 selectedAccountName,
                 paidAccountNameInput.getText().toString(),
                 new Double(Double.parseDouble(payAmountInput.getText().toString())),
-                payDateInput.getText().toString()
+//                payDateInput.getText().toString()
+                payDateToString
         );
 
         MyData.myData.addPaymentToDatabase(MyData.newPaymentItem);
@@ -106,25 +162,4 @@ public class AddPaymentActivity extends ActionBarActivity {
         finish();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_add_payment, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 }

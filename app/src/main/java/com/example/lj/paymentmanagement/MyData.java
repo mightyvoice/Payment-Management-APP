@@ -222,6 +222,7 @@ public class MyData extends SQLiteOpenHelper{
         selectAccountIndex = -1;
 
         updateAllAccountsFromDatabase();
+        updateAllMyPaymentItemsFromDatabase();
         updateAccountListView();
         updatePaymentListView();
     }
@@ -310,7 +311,6 @@ public class MyData extends SQLiteOpenHelper{
 
     }
 
-
     public void deleteSelectedPaymentItem(){
         if(selectedPaymentItem == null || selectedPaymentItem.payAccountName == ""){
             return;
@@ -321,7 +321,8 @@ public class MyData extends SQLiteOpenHelper{
                 + COLUMN_PAY_ACCOUNT + "=\"" +
                 selectedPaymentItem.payAccountName + "\" AND " +
                 COLUMN_PAY_AMOUNT + "=" +
-                selectedPaymentItem.payAmount.toString() + " AND " +
+                selectedPaymentItem.payAmount.toString()
+                + " AND " +
                 COLUMN_PAY_DATE + "=\"" + selectedPaymentItem.payDate + "\";");
         db.close();
 

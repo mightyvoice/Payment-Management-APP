@@ -42,7 +42,7 @@ public class MyAccount {
         return this.accountName + tmp +
                 this.bankName + tmp +
                 MyLib.getDateSuffix(this.dueDay) + tmp + "$" +
-                this.toPayBalance.toString() + tmp +
+                this.toPayBalance.toString() + tmp + "$" +
                 this.statementBalance.toString();
     }
 

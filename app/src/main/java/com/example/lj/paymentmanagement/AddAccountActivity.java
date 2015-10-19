@@ -18,8 +18,6 @@ public class AddAccountActivity extends ActionBarActivity {
     public EditText newAccountToPayInput;
     public Button addNewAccountButton;
 
-    TextToSpeech ttsObj;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
