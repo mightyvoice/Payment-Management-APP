@@ -70,7 +70,6 @@ public class AddAccountActivity extends ActionBarActivity {
                     dueDay,
                     staBalance);
             MyData.myData.addAccountToDatabase(MyData.newAccount);
-
             finish();
         }
     }

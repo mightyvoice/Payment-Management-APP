@@ -123,10 +123,8 @@ public class ItemDetailFragment extends Fragment {
                             return true;
                         }
                         MyData.selectPaymentItemIndex = position;
-                        MyData.selectedPaymentItem = MyPaymentItem.getMyPaymentItemFromString(
-                                MyData.paymentList.get(position));
-                        MyData.editPaymentItem = MyPaymentItem.getMyPaymentItemFromString(
-                                MyData.paymentList.get(position));
+                        MyData.selectedPaymentItem = MyData.allMyPaymentItems.get(position);
+                        MyData.editPaymentItem = MyData.allMyPaymentItems.get(position);
                         startActivity(new Intent(getActivity(),
                                 EditOrDeletePaymentActivity.class));
                         return true;

@@ -34,19 +34,6 @@ public class MyPaymentItem {
                 payDate;
     }
 
-    public static MyPaymentItem getMyPaymentItemFromString(String data){
-        String[] l = data.split(",");
-        String tmp = MyLib.cutFirstChar(l[2]);
-        if(l[2].indexOf("$") > -1){
-            l[2] = MyLib.cutFirstChar(l[2]);
-        }
-        MyPaymentItem ans = new MyPaymentItem(l[0].trim(),
-                l[1].trim(),
-                Double.parseDouble(l[2].trim()),
-                l[3].trim());
-        return ans;
-    }
-
     public static Boolean payAccountNameReverseSortFlag = false;
     public static Comparator<MyPaymentItem> payAccountNameComparator = new
             Comparator<MyPaymentItem>() {

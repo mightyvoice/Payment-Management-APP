@@ -135,10 +135,9 @@ public class AddPaymentActivity extends ActionBarActivity {
         }
         else {
             MyData.newPaymentItem = new MyPaymentItem(
-                    MyLib.captureName(selectedAccountName),
+                    MyLib.captureName(selectedAccountName.split(" ")[0]),
                     paidAccountNameInput.getText().toString(),
                     new Double(Double.parseDouble(payAmountInput.getText().toString())),
-//                payDateInput.getText().toString()
                     payDateToString
             );
 
