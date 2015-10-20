@@ -32,8 +32,8 @@ android:background="#92ffdf">
     android:text="Make Change"
     android:id="@+id/changePaymentButton"
     android:onClick="changePaymentButtonClicked"
-    android:layout_below="@+id/payDateInput"
-    android:layout_alignEnd="@+id/paidAccountNameLabel" />
+    android:layout_alignTop="@+id/deletePaymentButton"
+    android:layout_toStartOf="@+id/payAmountInput" />
 
 <EditText
     android:layout_width="wrap_content"
@@ -83,23 +83,23 @@ android:background="#92ffdf">
     android:layout_alignParentStart="true"
     android:layout_marginTop="27dp" />
 
-<EditText
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:inputType="date"
-    android:ems="10"
-    android:id="@+id/payDateInput"
-    android:layout_alignBottom="@+id/payDateLabel"
-    android:layout_alignStart="@+id/payAmountInput" />
-
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Delete"
         android:id="@+id/deletePaymentButton"
         android:onClick="deletePaymentButtonClicked"
-        android:layout_alignBottom="@+id/changePaymentButton"
-        android:layout_alignEnd="@+id/payDateInput"
-        android:layout_marginEnd="31dp" />
+        android:layout_below="@+id/payDateLabel"
+        android:layout_alignEnd="@+id/payAmountInput"
+        android:layout_marginEnd="37dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/editPayDayInput"
+        android:layout_alignTop="@+id/payDateLabel"
+        android:layout_alignStart="@+id/paidAccountNameInput"
+        android:layout_alignEnd="@+id/deletePaymentButton" />
 
 </RelativeLayout>

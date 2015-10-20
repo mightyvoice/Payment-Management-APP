@@ -153,18 +153,13 @@ public class MyData extends SQLiteOpenHelper{
         updateAccountListView();
     }
 
-    public boolean ifAccountNameAlreadyExist(String accountName){
-        SQLiteDatabase db = this.getWritableDatabase();
-        String query = "SELECT * FROM " + TABLE_ACCOUNTS + " WHERE " +
-                COLUMN_ACCOUNT_NAME + "=\"" + accountName +"\";";
-        Cursor cursor = db.rawQuery(query, null);
-        cursor.moveToFirst();
-        if(cursor.isAfterLast()){
-            return false;
+    static public boolean ifAccountAlreadyExist(String accountName){
+        for(MyAccount account: allMyAccounts){
+            if(account.accountName.equalsIgnoreCase(accountName)){
+                return true;
+            }
         }
-        else{
-            return true;
-        }
+        return false;
     }
 
     private Double getAccountAlreadyPaidAmount(String accountName){
@@ -180,23 +175,26 @@ public class MyData extends SQLiteOpenHelper{
             cursor.moveToNext();
         }
         db.close();
-//        return MyLib.roundTo2DecimalPoints(totalPaidAmount);
         return new Double(totalPaidAmount);
     }
 
-    private Double getCurrentTotalPayThisMonth(){
-        SQLiteDatabase db = this.getWritableDatabase();
-        String query = "SELECT * FROM " + TABLE_PAYMENTS + ";";
-        Cursor cursor = db.rawQuery(query, null);
-        cursor.moveToFirst();
-        Double totalBalance = 0.0;
-        while(!cursor.isAfterLast()){
-            totalBalance += cursor.getDouble(
-                    cursor.getColumnIndex(COLUMN_PAY_AMOUNT));
-            cursor.moveToNext();
+    public void updateAllAccountsPaidTimes(){
+        for(int i = 0; i < allMyAccounts.size(); i++){
+            MyAccount account = allMyAccounts.get(i);
+            SQLiteDatabase db = this.getWritableDatabase();
+            String query = "SELECT * FROM " + TABLE_PAYMENTS +
+                    " WHERE " + COLUMN_PAY_ACCOUNT + "=\"" + account.accountName + "\"";
+            Cursor cursor = db.rawQuery(query, null);
+            Integer paidTimes = 0;
+            cursor.moveToFirst();
+            while(!cursor.isAfterLast()){
+                paidTimes++;
+                cursor.moveToNext();
+            }
+            db.close();
+            account.paidTimes = paidTimes;
+            allMyAccounts.set(i, account);
         }
-        db.close();
-        return MyLib.roundTo2DecimalPoints(totalBalance);
     }
 
     public void deleteSelectedAccount(){
@@ -260,6 +258,12 @@ public class MyData extends SQLiteOpenHelper{
     }
 
 
+///////////////////Payment operations/////////////////////
+///////////////////Payment operations/////////////////////
+///////////////////Payment operations/////////////////////
+///////////////////Payment operations/////////////////////
+///////////////////Payment operations/////////////////////
+
     public void updateAllMyPaymentItemsFromDatabase(){
         allMyPaymentItems.clear();
         SQLiteDatabase db = this.getWritableDatabase();
@@ -281,6 +285,7 @@ public class MyData extends SQLiteOpenHelper{
         db.close();
 
     }
+
     public void updatePaymentListView(){
         paymentList.clear();
         for(MyPaymentItem paymentItem: allMyPaymentItems){
@@ -358,6 +363,21 @@ public class MyData extends SQLiteOpenHelper{
         updateAllAccountsFromDatabase();
 
         updatePaymentListView();
+    }
+
+    private Double getCurrentTotalPayThisMonth(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM " + TABLE_PAYMENTS + ";";
+        Cursor cursor = db.rawQuery(query, null);
+        cursor.moveToFirst();
+        Double totalBalance = 0.0;
+        while(!cursor.isAfterLast()){
+            totalBalance += cursor.getDouble(
+                    cursor.getColumnIndex(COLUMN_PAY_AMOUNT));
+            cursor.moveToNext();
+        }
+        db.close();
+        return MyLib.roundTo2DecimalPoints(totalBalance);
     }
 
 }

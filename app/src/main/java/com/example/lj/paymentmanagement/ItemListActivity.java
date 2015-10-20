@@ -9,6 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.Collections;
+
 /**
  * The main entrance of the whole app
  */
@@ -110,5 +112,70 @@ public class ItemListActivity extends FragmentActivity
     public void addPaymentButtonClicked(View view){
         startActivity(new Intent(this, AddPaymentActivity.class));
     }
+
+    public void accountNameLabelButtonClicked(View view){
+        MyData.myData.updateAllAccountsFromDatabase();
+        Collections.sort(MyData.allMyAccounts, MyAccount.accountNameComparator);
+        MyData.myData.updateAccountListView();
+        MyAccount.accountNameReverseSortFlag = !MyAccount.accountNameReverseSortFlag;
+    }
+
+    public void accountDueDayLabelButtonClicked(View view){
+        MyData.myData.updateAllAccountsFromDatabase();
+        Collections.sort(MyData.allMyAccounts, MyAccount.dueDayComparator);
+        MyData.myData.updateAccountListView();
+        MyAccount.dueDayReverseSortFlag = !MyAccount.dueDayReverseSortFlag;
+    }
+
+    public void accountBankNameLabelButtonClicked(View view){
+        MyData.myData.updateAllAccountsFromDatabase();
+        Collections.sort(MyData.allMyAccounts, MyAccount.bankNameComparator);
+        MyData.myData.updateAccountListView();
+        MyAccount.bankNameReverseSortFlag = !MyAccount.bankNameReverseSortFlag;
+    }
+
+    public void accountToPayLabelButtonClicked(View view){
+        MyData.myData.updateAllAccountsFromDatabase();
+        Collections.sort(MyData.allMyAccounts, MyAccount.toPayBalanceeComparator);
+        MyData.myData.updateAccountListView();
+        MyAccount.toPayBalanceReverseSortFlag = !MyAccount.toPayBalanceReverseSortFlag;
+    }
+
+    public void accountStaBalanceLabelButtonClicked(View view){
+        MyData.myData.updateAllAccountsFromDatabase();
+        Collections.sort(MyData.allMyAccounts, MyAccount.statementBalanceComparator);
+        MyData.myData.updateAccountListView();
+        MyAccount.statementBalanceReverseSortFlag = !MyAccount.statementBalanceReverseSortFlag;
+    }
+
+    public void payAccountNameLabelButtonClicked(View view){
+        MyData.myData.updateAllMyPaymentItemsFromDatabase();
+        Collections.sort(MyData.allMyPaymentItems, MyPaymentItem.payAccountNameComparator);
+        MyData.myData.updatePaymentListView();
+        MyPaymentItem.payAccountNameReverseSortFlag = !MyPaymentItem.payAccountNameReverseSortFlag;
+    }
+
+    public void paidAccountNameLabelButtonClicked(View view){
+        MyData.myData.updateAllMyPaymentItemsFromDatabase();
+        Collections.sort(MyData.allMyPaymentItems, MyPaymentItem.paidAccountNameComparator);
+        MyData.myData.updatePaymentListView();
+        MyPaymentItem.paidAccountNameReverseSortFlag = !MyPaymentItem.paidAccountNameReverseSortFlag;
+    }
+
+    public void payAmountLabelButtonClicked(View view){
+        MyData.myData.updateAllMyPaymentItemsFromDatabase();
+        Collections.sort(MyData.allMyPaymentItems, MyPaymentItem.payAmountComparator);
+        MyData.myData.updatePaymentListView();
+        MyPaymentItem.payAmountReverseSortFlag = !MyPaymentItem.payAmountReverseSortFlag;
+    }
+
+    public void payDateLabelButtonClicked(View view){
+        MyData.myData.updateAllMyPaymentItemsFromDatabase();
+        Collections.sort(MyData.allMyPaymentItems, MyPaymentItem.payDateComparator);
+        MyData.myData.updatePaymentListView();
+        MyPaymentItem.payDateReverseSortFlag = !MyPaymentItem.payDateReverseSortFlag;
+    }
+
+
 
 }

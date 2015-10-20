@@ -1,22 +1,30 @@
 package com.example.lj.paymentmanagement;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.TextView;
 
 public class EditOrDeletePaymentActivity extends ActionBarActivity {
 
     private EditText paidAccountNameInput;
     private EditText payAccountNameInput;
     private EditText payAmountInput;
-    private EditText payDateInput;
+    private TextView payDateInput;
+
+    private Integer payYear;
+    private Integer payMonth;
+    private Integer payDay;
+    private String payDateToString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,16 +42,46 @@ public class EditOrDeletePaymentActivity extends ActionBarActivity {
         paidAccountNameInput = (EditText) findViewById(R.id.paidAccountNameInput);
         payAccountNameInput = (EditText) findViewById(R.id.payAccountNameInput);
         payAmountInput = (EditText) findViewById(R.id.payAmountInput);
-        payDateInput = (EditText) findViewById(R.id.payDateInput);
+        payDateInput = (TextView) findViewById(R.id.editPayDayInput);
 
         payAccountNameInput.setText(MyData.selectedPaymentItem.payAccountName);
         paidAccountNameInput.setText(MyData.selectedPaymentItem.paidAccountName);
         payAmountInput.setText(MyData.selectedPaymentItem.payAmount.toString());
-        payDateInput.setText(MyData.selectedPaymentItem.payDate);
+
+        initPayDateInput();
     }
 
+    public void initPayDateInput(){
+        String[] tmp = MyData.selectedPaymentItem.payDate.split("/");
+        payYear = Integer.parseInt(tmp[0]);
+        payMonth = Integer.parseInt(tmp[1]);
+        payDay = Integer.parseInt(tmp[2]);
+        payDateToString = payYear+"/"+payMonth+"/"+payDay;
+        payDateInput.setText(payDateToString);
+        payDateInput.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(
+                        EditOrDeletePaymentActivity.this, payDateSet, payYear, payMonth - 1, payDay);
+                datePickerDialog.show();
+            }
+        });
+    }
+
+    DatePickerDialog.OnDateSetListener payDateSet =
+            new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                      int dayOfMonth) {
+                    payYear = year;
+                    payMonth = monthOfYear+1;
+                    payDay = dayOfMonth;
+                    payDateToString = payYear+"/"+payMonth+"/"+payDay;
+                    payDateInput.setText(payDateToString);
+                }
+            };
+
     public void deletePaymentButtonClicked(View view){
-//        Toast.makeText(this, "delete button clicked", Toast.LENGTH_LONG).show();
         new AlertDialog.Builder(this).setTitle("Confirm Delete")
                 .setMessage("Confirm to delete the payment to: "+
                         MyData.selectedPaymentItem.payAccountName+" on " +
@@ -67,11 +105,6 @@ public class EditOrDeletePaymentActivity extends ActionBarActivity {
     }
 
     public void changePaymentButtonClicked(View view){
-        paidAccountNameInput = (EditText) findViewById(R.id.paidAccountNameInput);
-        payAccountNameInput = (EditText) findViewById(R.id.payAccountNameInput);
-        payAmountInput = (EditText) findViewById(R.id.payAmountInput);
-        payDateInput = (EditText) findViewById(R.id.payDateInput);
-
         MyData.editPaymentItem = new MyPaymentItem();
         MyData.editPaymentItem.payAccountName = payAccountNameInput.getText().toString();
         MyData.editPaymentItem.paidAccountName = paidAccountNameInput.getText().toString();

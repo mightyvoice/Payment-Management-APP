@@ -3,13 +3,9 @@ package com.example.lj.paymentmanagement;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,20 +13,18 @@ import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
-import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 
 public class AddPaymentActivity extends ActionBarActivity {
 
-    private EditText paidAccountNameInput;
-    private EditText payAccountNameInput;
-    private EditText payAmountInput;
-    private EditText payDateInput;
     private Spinner  payAccountSpinner;
-    private DatePicker payDatePicker;
+    private EditText paidAccountNameInput;
+    private EditText payAmountInput;
+    private TextView payDateInput;
 
     private Integer payYear;
     private Integer payMonth;
@@ -58,37 +52,25 @@ public class AddPaymentActivity extends ActionBarActivity {
         payAccountSpinner = (Spinner) findViewById(R.id.payAccountSpinner);
         paidAccountNameInput = (EditText) findViewById(R.id.paidAccountNameInput);
         payAmountInput = (EditText) findViewById(R.id.payAmountInput);
-        payDateInput = (EditText) findViewById(R.id.payDateInput);
+        payDateInput = (TextView) findViewById(R.id.payDateInput);
 
         initPayAccountSpinner();
-        initPayDatePicker();
+        initPayDateInput();
     }
 
-    public void initPayDatePicker(){
+    public void initPayDateInput(){
         Calendar c = Calendar.getInstance();
         payYear = c.get(Calendar.YEAR);
         payMonth = c.get(Calendar.MONTH)+1;
         payDay = c.get(Calendar.DAY_OF_MONTH);
         payDateToString = payYear+"/"+payMonth+"/"+payDay;
         payDateInput.setText(payDateToString);
-
-//        payDateInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-//                if(hasFocus){
-//                    DatePickerDialog datePickerDialog = new DatePickerDialog(
-//                            AddPaymentActivity.this , payDateSet, payYear, payMonth-1, payDay);
-//                    datePickerDialog.show();
-//                }
-//            }
-//        });
-        payDateInput.setOnTouchListener(new View.OnTouchListener() {
+        payDateInput.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public void onClick(View v) {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        AddPaymentActivity.this , payDateSet, payYear, payMonth-1, payDay);
+                        AddPaymentActivity.this, payDateSet, payYear, payMonth - 1, payDay);
                 datePickerDialog.show();
-                return true;
             }
         });
     }
@@ -109,6 +91,9 @@ public class AddPaymentActivity extends ActionBarActivity {
     public void initPayAccountSpinner(){
 
         payAccountList.clear();
+        MyData.myData.updateAllAccountsPaidTimes();
+        MyAccount.paidTimesReverseSortFlag = true;
+        Collections.sort(MyData.allMyAccounts, MyAccount.paidTimesComparator);
         for(MyAccount account: MyData.allMyAccounts){
             payAccountList.add(account.accountName + " from " + account.bankName);
         }
@@ -139,27 +124,28 @@ public class AddPaymentActivity extends ActionBarActivity {
             payAmountInput.setText("0");
         }
 
-        if(payAmountInput.getText().toString() == "0"){
+        if(Double.parseDouble(payAmountInput.getText().toString()) == 0.0){
             new AlertDialog.Builder(this).setTitle("Amount Error")
                     .setMessage("Pay Amount Cannot Be $0")
                     .setNegativeButton("Return", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                }
-            }).show();
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    }).show();
         }
-
-        MyData.newPaymentItem = new MyPaymentItem(
-                selectedAccountName,
-                paidAccountNameInput.getText().toString(),
-                new Double(Double.parseDouble(payAmountInput.getText().toString())),
+        else {
+            MyData.newPaymentItem = new MyPaymentItem(
+                    MyLib.captureName(selectedAccountName),
+                    paidAccountNameInput.getText().toString(),
+                    new Double(Double.parseDouble(payAmountInput.getText().toString())),
 //                payDateInput.getText().toString()
-                payDateToString
-        );
+                    payDateToString
+            );
 
-        MyData.myData.addPaymentToDatabase(MyData.newPaymentItem);
+            MyData.myData.addPaymentToDatabase(MyData.newPaymentItem);
 
-        finish();
+            finish();
+        }
     }
 
 }

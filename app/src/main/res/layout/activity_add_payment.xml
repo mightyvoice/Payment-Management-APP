@@ -25,7 +25,7 @@
         android:text="Add"
         android:id="@+id/addPaymentButton"
         android:onClick="addPaymentButtonClicked"
-        android:layout_below="@+id/payDateInput"
+        android:layout_below="@+id/payDateLabel"
         android:layout_centerHorizontal="true" />
 
     <EditText
@@ -76,16 +76,6 @@
         android:layout_alignParentStart="true"
         android:layout_marginTop="27dp" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="date"
-        android:ems="10"
-        android:id="@+id/payDateInput"
-        android:layout_alignBottom="@+id/payDateLabel"
-        android:layout_alignStart="@+id/payAmountInput"
-        android:layout_alignEnd="@+id/payAmountInput"/>
-
     <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -93,6 +83,15 @@
         android:spinnerMode="dropdown"
         android:layout_alignTop="@+id/payAccountNameLabel"
         android:layout_toEndOf="@+id/paidAccountNameLabel" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/payDateInput"
+        android:layout_alignTop="@+id/payDateLabel"
+        android:layout_alignStart="@+id/addPaymentButton"
+        android:layout_marginStart="36dp" />
 
 
 </RelativeLayout>

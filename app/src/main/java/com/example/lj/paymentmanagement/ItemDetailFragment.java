@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -20,6 +21,7 @@ import com.example.lj.paymentmanagement.R;
 import com.example.lj.paymentmanagement.dummy.DummyContent;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * A fragment representing a single Item detail screen.
@@ -131,5 +133,6 @@ public class ItemDetailFragment extends Fragment {
                     }
                 });
     }
+
 
 }

@@ -1,6 +1,7 @@
 package com.example.lj.paymentmanagement;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 
 /**
@@ -20,7 +21,8 @@ public class MyAccount {
     public Double totalPayThisMonth;
     //Date
     public Integer dueDay;
-    public Date statementDate;
+    public Integer statementDate;
+    public Integer paidTimes;
 
     //
     public ArrayList<MyPaymentItem> paymentList = new ArrayList<MyPaymentItem>();
@@ -35,6 +37,7 @@ public class MyAccount {
         this.statementBalance = statementBalance;
         this.toPayBalance = statementBalance;
         this.totalPayThisMonth = 0.0;
+        this.paidTimes = 0;
     }
 
     public String toString(){
@@ -46,20 +49,6 @@ public class MyAccount {
                 this.statementBalance.toString();
     }
 
-    public static MyAccount getMyAccountFromString(String data){
-        String[] l = data.split(",");
-        if(l[3].indexOf("$") > -1){
-            l[3] = MyLib.cutFirstChar(l[3]);
-        }
-        Double stateBalance = new Double(Double.parseDouble(l[3].trim()));
-        double tmp = Double.parseDouble(l[3].trim());
-        MyAccount ans = new MyAccount(l[0].trim(),
-                l[1].trim(),
-                MyLib.stringToInteger(l[2].trim()),
-                stateBalance);
-        return ans;
-    }
-
     public void updateToPayBalance(){
         if(this.statementBalance > this.totalPayThisMonth){
             this.toPayBalance = this.statementBalance - this.totalPayThisMonth;
@@ -68,4 +57,88 @@ public class MyAccount {
             this.toPayBalance = 0.0;
         }
     }
+
+    public static Boolean accountNameReverseSortFlag = false;
+    public static Comparator<MyAccount> accountNameComparator = new
+            Comparator<MyAccount>() {
+                @Override
+                public int compare(MyAccount x, MyAccount y) {
+                    if(accountNameReverseSortFlag) {
+                        return -x.accountName.compareTo(y.accountName);
+                    }
+                    else{
+                        return x.accountName.compareTo(y.accountName);
+                    }
+                }
+            };
+
+    public static Boolean bankNameReverseSortFlag = false;
+    public static Comparator<MyAccount> bankNameComparator = new
+            Comparator<MyAccount>() {
+                @Override
+                public int compare(MyAccount x, MyAccount y) {
+                    if(bankNameReverseSortFlag) {
+                        return -x.bankName.compareTo(y.bankName);
+                    }
+                    else{
+                        return x.bankName.compareTo(y.bankName);
+                    }
+                }
+            };
+
+    public static Boolean dueDayReverseSortFlag = false;
+    public static Comparator<MyAccount> dueDayComparator = new
+            Comparator<MyAccount>() {
+                @Override
+                public int compare(MyAccount x, MyAccount y) {
+                    if(dueDayReverseSortFlag) {
+                        return -x.dueDay.compareTo(y.dueDay);
+                    }
+                    else{
+                        return x.dueDay.compareTo(y.dueDay);
+                    }
+                }
+            };
+
+    public static Boolean paidTimesReverseSortFlag = false;
+    public static Comparator<MyAccount> paidTimesComparator = new
+            Comparator<MyAccount>() {
+                @Override
+                public int compare(MyAccount x, MyAccount y) {
+                    if(paidTimesReverseSortFlag) {
+                        return -x.paidTimes.compareTo(y.paidTimes);
+                    }
+                    else{
+                        return x.paidTimes.compareTo(y.paidTimes);
+                    }
+                }
+            };
+
+    public static Boolean statementBalanceReverseSortFlag = false;
+    public static Comparator<MyAccount> statementBalanceComparator = new
+            Comparator<MyAccount>() {
+                @Override
+                public int compare(MyAccount x, MyAccount y) {
+                    if(statementBalanceReverseSortFlag) {
+                        return -x.statementBalance.compareTo(y.statementBalance);
+                    }
+                    else{
+                        return x.statementBalance.compareTo(y.statementBalance);
+                    }
+                }
+            };
+
+    public static Boolean toPayBalanceReverseSortFlag = false;
+    public static Comparator<MyAccount> toPayBalanceeComparator = new
+            Comparator<MyAccount>() {
+                @Override
+                public int compare(MyAccount x, MyAccount y) {
+                    if(toPayBalanceReverseSortFlag) {
+                        return -x.toPayBalance.compareTo(y.toPayBalance);
+                    }
+                    else{
+                        return x.toPayBalance.compareTo(y.toPayBalance);
+                    }
+                }
+            };
 }

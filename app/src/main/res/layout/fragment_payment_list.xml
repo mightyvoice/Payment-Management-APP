@@ -11,14 +11,46 @@
         android:onClick="addPaymentButtonClicked"
         android:layout_gravity="center_horizontal" />
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Name,   Paid,   Amount,   Date"
-        android:id="@+id/textView"
-        android:layout_marginLeft="40dp"
-        android:textSize="20dp" />
+        android:weightSum="1">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:id="@+id/payAccountNameLabelButton"
+            android:textSize="12dp"
+            android:onClick="payAccountNameLabelButtonClicked" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="From"
+            android:id="@+id/paidAccountNameLabelButton"
+            android:textSize="12dp"
+            android:onClick="paidAccountNameLabelButtonClicked" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Amount"
+            android:id="@+id/payAmountLabelButton"
+            android:textSize="12dp"
+            android:onClick="payAmountLabelButtonClicked"
+            android:layout_weight="0.03" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date"
+            android:id="@+id/payDateLabelButton"
+            android:textSize="12dp"
+            android:onClick="payDateLabelButtonClicked"
+            android:layout_weight="0.03" />
+    </LinearLayout>
 
     <ListView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"

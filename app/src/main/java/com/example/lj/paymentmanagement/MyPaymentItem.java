@@ -1,6 +1,7 @@
 package com.example.lj.paymentmanagement;
 
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 
 /**
@@ -45,4 +46,60 @@ public class MyPaymentItem {
                 l[3].trim());
         return ans;
     }
+
+    public static Boolean payAccountNameReverseSortFlag = false;
+    public static Comparator<MyPaymentItem> payAccountNameComparator = new
+            Comparator<MyPaymentItem>() {
+                @Override
+                public int compare(MyPaymentItem x, MyPaymentItem y) {
+                    if(payAccountNameReverseSortFlag) {
+                        return -x.payAccountName.compareTo(y.payAccountName);
+                    }
+                    else{
+                        return x.payAccountName.compareTo(y.payAccountName);
+                    }
+                }
+            };
+
+    public static Boolean paidAccountNameReverseSortFlag = false;
+    public static Comparator<MyPaymentItem> paidAccountNameComparator = new
+            Comparator<MyPaymentItem>() {
+                @Override
+                public int compare(MyPaymentItem x, MyPaymentItem y) {
+                    if(paidAccountNameReverseSortFlag) {
+                        return -x.paidAccountName.compareTo(y.paidAccountName);
+                    }
+                    else{
+                        return x.paidAccountName.compareTo(y.paidAccountName);
+                    }
+                }
+            };
+
+    public static Boolean payAmountReverseSortFlag = false;
+    public static Comparator<MyPaymentItem> payAmountComparator = new
+            Comparator<MyPaymentItem>() {
+                @Override
+                public int compare(MyPaymentItem x, MyPaymentItem y) {
+                    if(payAmountReverseSortFlag) {
+                        return -x.payAmount.compareTo(y.payAmount);
+                    }
+                    else{
+                        return x.payAmount.compareTo(y.payAmount);
+                    }
+                }
+            };
+
+    public static Boolean payDateReverseSortFlag = false;
+    public static Comparator<MyPaymentItem> payDateComparator = new
+            Comparator<MyPaymentItem>() {
+                @Override
+                public int compare(MyPaymentItem x, MyPaymentItem y) {
+                    if(payDateReverseSortFlag) {
+                        return -x.payDate.compareTo(y.payDate);
+                    }
+                    else{
+                        return x.payDate.compareTo(y.payDate);
+                    }
+                }
+            };
 }
