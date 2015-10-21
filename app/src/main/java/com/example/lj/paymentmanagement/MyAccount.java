@@ -9,7 +9,6 @@ import java.util.Date;
  */
 public class MyAccount {
 
-    public int _id;
     //name
     public String accountName;
     public String bankName;
@@ -19,21 +18,21 @@ public class MyAccount {
     public Double currentBalance;
     public Double toPayBalance;
     public Double totalPayThisMonth;
+
     //Date
     public Integer dueDay;
-    public Integer statementDate;
+    public Integer staDay;
     public Integer paidTimes;
-
-    //
-    public ArrayList<MyPaymentItem> paymentList = new ArrayList<MyPaymentItem>();
 
     public MyAccount(){}
 
     public MyAccount(String accountName, String bankName, Integer dueDay,
+                     Integer staDay,
                      Double statementBalance){
         this.accountName = accountName;
         this.bankName = bankName;
         this.dueDay = dueDay;
+        this.staDay = staDay;
         this.statementBalance = statementBalance;
         this.toPayBalance = statementBalance;
         this.totalPayThisMonth = 0.0;
@@ -45,8 +44,8 @@ public class MyAccount {
         return this.accountName + tmp +
                 this.bankName + tmp +
                 MyLib.getDateSuffix(this.dueDay) + tmp + "$" +
-                this.toPayBalance.toString() + tmp + "$" +
-                this.statementBalance.toString();
+                this.statementBalance.toString() + tmp + "$" +
+                this.toPayBalance.toString();
     }
 
     public void updateToPayBalance(){

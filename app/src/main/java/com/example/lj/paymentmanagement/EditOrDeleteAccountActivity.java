@@ -31,7 +31,9 @@ public class EditOrDeleteAccountActivity extends ActionBarActivity {
         int width = ds.widthPixels;
         int height = ds.heightPixels;
 
-        getWindow().setLayout((int) (width * 0.6), (int) (height * 0.7));
+        getWindow().setLayout(
+                (int) (width * MyConfigure.NEW_ACTIVITY_WIDTH_RATIO),
+                (int) (height * MyConfigure.NEW_ACTIVITY_HEIGHT_RATIO));
 
         editAccountName = (EditText) findViewById(R.id.editAccountNameInput);
         editAccountBank = (EditText) findViewById(R.id.editAccountBankInput);
@@ -43,14 +45,13 @@ public class EditOrDeleteAccountActivity extends ActionBarActivity {
         editAccountDueDay.setText(MyData.selectedAccount.dueDay.toString());
         editAccountStaBalance.setText(MyData.selectedAccount.statementBalance.toString());
 
-//        editAccountName.setEnabled(false);
-
     }
 
     public void changeAccountButtonClicked(View view) {
 
         MyData.editAccount = new MyAccount(editAccountName.getText().toString(),
                                             editAccountBank.getText().toString(),
+                                            new Integer(Integer.parseInt(editAccountDueDay.getText().toString())),
                                             new Integer(Integer.parseInt(editAccountDueDay.getText().toString())),
                                             new Double(Double.parseDouble(editAccountStaBalance.getText().toString())));
 
@@ -81,7 +82,6 @@ public class EditOrDeleteAccountActivity extends ActionBarActivity {
     }
 
     public void deleteAccountButtonClicked(View view) {
-//        Toast.makeText(this, "delete button clicked", Toast.LENGTH_LONG).show();
         new AlertDialog.Builder(this).setTitle("Confirm")
                 .setMessage("Confirm to delete the account: "+
                 MyData.selectedAccount.accountName+" from " +
@@ -101,28 +101,5 @@ public class EditOrDeleteAccountActivity extends ActionBarActivity {
                         MyData.confirmedToDelete = false;
                     }
                 }).show();
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_edit_or_delete_account, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }

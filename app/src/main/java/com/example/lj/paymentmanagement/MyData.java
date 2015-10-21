@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -22,11 +23,10 @@ public class MyData extends SQLiteOpenHelper{
     public static ArrayList<MyAccount> allMyAccounts = new ArrayList<MyAccount>();
 
     public static ArrayList<String> displayAccountList = new ArrayList<String>();
-    public static ArrayList<String> accountList = new ArrayList<String>();
     public static ArrayAdapter<String> accountListAdapter;
 
     public static ArrayList<MyPaymentItem> allMyPaymentItems = new ArrayList<MyPaymentItem>();
-    public static ArrayList<String> paymentList = new ArrayList<String>();
+    public static ArrayList<String> displayPaymentList = new ArrayList<String>();
     public static ArrayAdapter<String> paymentListAdapter;
 
     public static boolean confirmedToDelete = false;
@@ -52,6 +52,7 @@ public class MyData extends SQLiteOpenHelper{
     private static final String COLUMN_ACCOUNT_BANK = "accountBank";
     private static final String COLUMN_ACCOUNT_DUEDAY = "accountDueDay";
     private static final String COLUMN_ACCOUNT_STA_BALANCE = "accountStaBalance";
+    private static final String COLUMN_ACCOUNT_STA_DAY = "accountStaDay";
 
     //column names for the payment table
     private static final String TABLE_PAYMENTS = "myPayments";
@@ -67,8 +68,8 @@ public class MyData extends SQLiteOpenHelper{
 
     public MyData(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
-        updateAllAccountsFromDatabase();
         updateAllMyPaymentItemsFromDatabase();
+        updateAllAccountsFromDatabase();
     }
 
     @Override
@@ -80,6 +81,7 @@ public class MyData extends SQLiteOpenHelper{
                 COLUMN_ACCOUNT_NAME + " TEXT, " +
                 COLUMN_ACCOUNT_BANK + " TEXT, " +
                 COLUMN_ACCOUNT_DUEDAY + " INTEGER, " +
+                COLUMN_ACCOUNT_STA_DAY + " INTEGER, " +
                 COLUMN_ACCOUNT_STA_BALANCE + " DOUBLE " +
                 ");";
         db.execSQL(query);
@@ -115,26 +117,37 @@ public class MyData extends SQLiteOpenHelper{
                         cursor.getString(cursor.getColumnIndex(COLUMN_ACCOUNT_NAME)),
                         cursor.getString(cursor.getColumnIndex(COLUMN_ACCOUNT_BANK)),
                         new Integer(cursor.getInt(cursor.getColumnIndex(COLUMN_ACCOUNT_DUEDAY))),
+                        new Integer(cursor.getInt(cursor.getColumnIndex(COLUMN_ACCOUNT_STA_DAY))),
                         new Double(cursor.getDouble(cursor.getColumnIndex(COLUMN_ACCOUNT_STA_BALANCE))));
-                tmp.totalPayThisMonth = getAccountAlreadyPaidAmount(tmp.accountName);
-                tmp.updateToPayBalance();
                 allMyAccounts.add(tmp);
             }
             cursor.moveToNext();
         }
         db.close();
+        updateAllAccountsTotalPaidCurrentBillingCycle();
+        updateAllAccountsPaidTimes();
+    }
+
+    public void updateAllAccountsTotalPaidCurrentBillingCycle(){
+        for(int i = 0; i < allMyAccounts.size(); i++){
+            MyAccount account = allMyAccounts.get(i);
+            account.totalPayThisMonth =
+                    getAccountAlreadyPaidAmountCurrentBillingCycle(account);
+            account.updateToPayBalance();
+            allMyAccounts.set(i, account);
+        }
     }
 
     public void updateAccountListView(){
-        accountList.clear();
+        displayAccountList.clear();
         Double totalNeedToPay = 0.0;
         for(MyAccount account: allMyAccounts){
-            accountList.add(account.toString());
+            displayAccountList.add(account.toString());
             if(account.toPayBalance > 0.0){
                 totalNeedToPay += account.toPayBalance;
             }
         }
-        accountList.add("Total Balance Need To Pay: $"
+        displayAccountList.add("Total Balance Need To Pay: $"
                 + totalNeedToPay.toString());
         accountListAdapter.notifyDataSetChanged();
     }
@@ -146,6 +159,7 @@ public class MyData extends SQLiteOpenHelper{
         values.put(COLUMN_ACCOUNT_NAME, myAccount.accountName);
         values.put(COLUMN_ACCOUNT_BANK, myAccount.bankName);
         values.put(COLUMN_ACCOUNT_DUEDAY, myAccount.dueDay);
+        values.put(COLUMN_ACCOUNT_STA_DAY, myAccount.staDay);
         values.put(COLUMN_ACCOUNT_STA_BALANCE, myAccount.statementBalance);
         SQLiteDatabase db = getWritableDatabase();
         db.insert(TABLE_ACCOUNTS, null, values);
@@ -178,20 +192,38 @@ public class MyData extends SQLiteOpenHelper{
         return new Double(totalPaidAmount);
     }
 
+    private Double getAccountAlreadyPaidAmountCurrentBillingCycle(MyAccount account){
+        updateAllMyPaymentItemsFromDatabase();
+        Calendar c = Calendar.getInstance();
+        int curDay = c.get(Calendar.DAY_OF_MONTH);
+        int dueDay = account.dueDay;
+        int staDay = account.staDay;
+        int staMonth = c.get(Calendar.MONTH)+1;
+        int staYear = c.get(Calendar.YEAR);
+        Double total = 0.0;
+        for(int i = 0; i < allMyPaymentItems.size(); i++){
+            if(allMyPaymentItems.get(i).payAccountName.equals(account.accountName)){
+                int payDay = Integer.parseInt(allMyPaymentItems.get(i).payDate.split("/")[2]);
+                int payMonth = Integer.parseInt(allMyPaymentItems.get(i).payDate.split("/")[1]);
+                int payYear = Integer.parseInt(allMyPaymentItems.get(i).payDate.split("/")[0]);
+                if((payDay > staDay && payMonth == staMonth && payYear== staYear) ||
+                        (payDay <= staDay && payMonth == staMonth && payYear == staYear)){
+                    total += allMyPaymentItems.get(i).payAmount;
+                }
+            }
+        }
+        return total;
+    }
+
     public void updateAllAccountsPaidTimes(){
         for(int i = 0; i < allMyAccounts.size(); i++){
             MyAccount account = allMyAccounts.get(i);
-            SQLiteDatabase db = this.getWritableDatabase();
-            String query = "SELECT * FROM " + TABLE_PAYMENTS +
-                    " WHERE " + COLUMN_PAY_ACCOUNT + "=\"" + account.accountName + "\"";
-            Cursor cursor = db.rawQuery(query, null);
-            Integer paidTimes = 0;
-            cursor.moveToFirst();
-            while(!cursor.isAfterLast()){
-                paidTimes++;
-                cursor.moveToNext();
+            int paidTimes = 0;
+            for(int j = 0; j < allMyPaymentItems.size(); j++){
+                if(allMyPaymentItems.get(j).payAccountName == account.accountName){
+                    paidTimes++;
+                }
             }
-            db.close();
             account.paidTimes = paidTimes;
             allMyAccounts.set(i, account);
         }
@@ -202,11 +234,9 @@ public class MyData extends SQLiteOpenHelper{
             return;
         }
         SQLiteDatabase db = getWritableDatabase();
-//        String query = "DELETE FROM " + TABLE_ACCOUNTS + " WHERE "
-//                + COLUMN_ACCOUNT_NAME + "=\"" + selectedAccount.accountName +// "\" AND " +
-//                COLUMN_ACCOUNT_BANK + "=\"" + selectedAccount.bankName + "\";";
         String query = "DELETE FROM " + TABLE_ACCOUNTS + " WHERE "
-                + COLUMN_ACCOUNT_NAME + "=\"" + selectedAccount.accountName + "\"";
+                + COLUMN_ACCOUNT_NAME + "=\"" + selectedAccount.accountName + "\" AND " +
+                COLUMN_ACCOUNT_BANK + "=\"" + selectedAccount.bankName + "\";";
         db.execSQL(query);
         query = "DELETE  FROM " + TABLE_PAYMENTS + " WHERE "
                 + COLUMN_PAY_ACCOUNT + "=\"" +
@@ -260,9 +290,6 @@ public class MyData extends SQLiteOpenHelper{
 
 ///////////////////Payment operations/////////////////////
 ///////////////////Payment operations/////////////////////
-///////////////////Payment operations/////////////////////
-///////////////////Payment operations/////////////////////
-///////////////////Payment operations/////////////////////
 
     public void updateAllMyPaymentItemsFromDatabase(){
         allMyPaymentItems.clear();
@@ -287,11 +314,11 @@ public class MyData extends SQLiteOpenHelper{
     }
 
     public void updatePaymentListView(){
-        paymentList.clear();
+        displayPaymentList.clear();
         for(MyPaymentItem paymentItem: allMyPaymentItems){
-            paymentList.add(paymentItem.toString());
+            displayPaymentList.add(paymentItem.toString());
         }
-        paymentList.add("Total payment in this month is: $" +
+        displayPaymentList.add("Total payment in this month is: $" +
                 getCurrentTotalPayThisMonth().toString());
         paymentListAdapter.notifyDataSetChanged();
     }

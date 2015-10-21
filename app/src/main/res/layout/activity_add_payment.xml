@@ -25,17 +25,17 @@
         android:text="Add"
         android:id="@+id/addPaymentButton"
         android:onClick="addPaymentButtonClicked"
-        android:layout_below="@+id/payDateLabel"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/payDateInput"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/paidAccountNameInput"
-        android:width="200dp"
-        android:layout_marginTop="46dp"
-        android:layout_below="@+id/payAccountNameLabel"
-        android:layout_alignStart="@+id/addPaymentButton" />
+        android:id="@+id/editPaidAccountNameInput"
+        android:width="150dp"
+        android:layout_below="@+id/payAccountSpinner"
+        android:layout_alignStart="@+id/editPayAmountInput" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -43,8 +43,8 @@
         android:id="@+id/paidAccountNameLabel"
         android:textSize="20dp"
         android:text="Paid Account"
-        android:layout_alignBaseline="@+id/paidAccountNameInput"
-        android:layout_alignBottom="@+id/paidAccountNameInput"
+        android:layout_alignBaseline="@+id/editPaidAccountNameInput"
+        android:layout_alignBottom="@+id/editPaidAccountNameInput"
         android:layout_alignParentStart="true" />
 
     <TextView
@@ -54,17 +54,18 @@
         android:id="@+id/editDueDayLabel"
         android:textSize="20dp"
         android:layout_marginTop="31dp"
-        android:layout_below="@+id/paidAccountNameInput"
+        android:layout_below="@+id/editPaidAccountNameInput"
         android:layout_alignParentStart="true" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:width="150dp"
         android:inputType="numberDecimal"
         android:ems="10"
-        android:id="@+id/payAmountInput"
+        android:id="@+id/editPayAmountInput"
         android:layout_alignBottom="@+id/editDueDayLabel"
-        android:layout_toEndOf="@+id/paidAccountNameLabel" />
+        android:layout_alignStart="@+id/payDateInput" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -72,17 +73,19 @@
         android:text="Pay Day"
         android:id="@+id/payDateLabel"
         android:textSize="20dp"
-        android:layout_below="@+id/payAmountInput"
+        android:layout_below="@+id/editPayAmountInput"
         android:layout_alignParentStart="true"
         android:layout_marginTop="27dp" />
 
     <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:width="100dp"
         android:id="@+id/payAccountSpinner"
         android:spinnerMode="dropdown"
-        android:layout_alignTop="@+id/payAccountNameLabel"
-        android:layout_toEndOf="@+id/paidAccountNameLabel" />
+        android:layout_alignBaseline="@+id/payAccountNameLabel"
+        android:layout_alignBottom="@+id/payAccountNameLabel"
+        android:layout_alignStart="@+id/addPaymentButton" />
 
     <TextView
         android:layout_width="wrap_content"

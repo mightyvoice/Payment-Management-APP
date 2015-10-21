@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -47,11 +46,13 @@ public class AddPaymentActivity extends ActionBarActivity {
         int width = ds.widthPixels;
         int height = ds.heightPixels;
 
-        getWindow().setLayout((int) (width * 0.6), (int) (height * 0.7));
+        getWindow().setLayout(
+                (int) (width * MyConfigure.NEW_ACTIVITY_WIDTH_RATIO),
+                (int) (height * MyConfigure.NEW_ACTIVITY_HEIGHT_RATIO));
 
         payAccountSpinner = (Spinner) findViewById(R.id.payAccountSpinner);
-        paidAccountNameInput = (EditText) findViewById(R.id.paidAccountNameInput);
-        payAmountInput = (EditText) findViewById(R.id.payAmountInput);
+        paidAccountNameInput = (EditText) findViewById(R.id.editPaidAccountNameInput);
+        payAmountInput = (EditText) findViewById(R.id.editPayAmountInput);
         payDateInput = (TextView) findViewById(R.id.payDateInput);
 
         initPayAccountSpinner();
@@ -91,9 +92,9 @@ public class AddPaymentActivity extends ActionBarActivity {
     public void initPayAccountSpinner(){
 
         payAccountList.clear();
-        MyData.myData.updateAllAccountsPaidTimes();
         MyAccount.paidTimesReverseSortFlag = true;
         Collections.sort(MyData.allMyAccounts, MyAccount.paidTimesComparator);
+        MyAccount.paidTimesReverseSortFlag = false;
         for(MyAccount account: MyData.allMyAccounts){
             payAccountList.add(account.accountName + " from " + account.bankName);
         }
@@ -135,8 +136,8 @@ public class AddPaymentActivity extends ActionBarActivity {
         }
         else {
             MyData.newPaymentItem = new MyPaymentItem(
-                    MyLib.captureName(selectedAccountName.split(" ")[0]),
-                    paidAccountNameInput.getText().toString(),
+                    MyLib.captureLongName(MyLib.getRealAccountNameFromInput(selectedAccountName)),
+                    MyLib.captureLongName(paidAccountNameInput.getText().toString()),
                     new Double(Double.parseDouble(payAmountInput.getText().toString())),
                     payDateToString
             );

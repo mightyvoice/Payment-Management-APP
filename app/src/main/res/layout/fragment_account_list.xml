@@ -43,14 +43,6 @@
             android:textSize="12dp" />
 
         <Button
-            android:layout_width="74dp"
-            android:layout_height="wrap_content"
-            android:text="To Pay"
-            android:id="@+id/accountToPayLabelButton"
-            android:onClick="accountToPayLabelButtonClicked"
-            android:textSize="12dp" />
-
-        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sta Balance"
@@ -58,6 +50,15 @@
             android:onClick="accountStaBalanceLabelButtonClicked"
             android:layout_weight="0.05"
             android:textSize="12dp" />
+
+        <Button
+            android:layout_width="74dp"
+            android:layout_height="wrap_content"
+            android:text="To Pay"
+            android:id="@+id/accountToPayLabelButton"
+            android:onClick="accountToPayLabelButtonClicked"
+            android:textSize="12dp" />
+
     </LinearLayout>
 
     <ListView xmlns:android="http://schemas.android.com/apk/res/android"

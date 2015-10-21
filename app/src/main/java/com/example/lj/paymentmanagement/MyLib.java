@@ -54,12 +54,40 @@ public class MyLib {
     }
 
     public static String captureName(String name) {
-        //     name = name.substring(0, 1).toUpperCase() + name.substring(1);
-//        return  name;
-        name = name.toLowerCase();
         char[] cs=name.toCharArray();
-        cs[0]-=32;
+        if(cs[0] >= 'a' && cs[0] <= 'z'){
+            cs[0]-=32;
+        }
         return String.valueOf(cs);
 
+    }
+
+    public static String captureLongName(String name){
+        String[] l = name.split(" ");
+        String ans = "";
+        for(int i = 0; i < l.length; i++){
+            if(i > 0){
+                ans += " ";
+            }
+            ans += captureName(l[i]);
+        }
+        return ans;
+    }
+
+    public static String getRealAccountNameFromInput(String name){
+        String[] l = name.split(" ");
+        String ans = "";
+        for(int i = 0; i < l.length; i++){
+            if(l[i].equals("from")){
+                break;
+            }
+            else{
+                if(i > 0){
+                    ans += " ";
+                }
+                ans += captureName(l[i]);
+            }
+        }
+        return ans;
     }
 }

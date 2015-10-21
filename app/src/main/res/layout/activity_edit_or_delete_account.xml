@@ -32,8 +32,9 @@
         android:text="Make Change"
         android:id="@+id/changeAccountButton"
         android:onClick="changeAccountButtonClicked"
-        android:layout_centerVertical="true"
-        android:layout_toStartOf="@+id/editAccountStaBalanceInput" />
+        android:layout_below="@+id/editAccountStaBalanceInput"
+        android:layout_toStartOf="@+id/editAccountStaBalanceInput"
+        android:layout_marginTop="60dp" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -88,7 +89,7 @@
         android:ems="10"
         android:id="@+id/editAccountStaBalanceInput"
         android:layout_alignTop="@+id/toPayLabel"
-        android:layout_alignStart="@+id/editAccountDueDayInput" />
+        android:layout_alignStart="@+id/deleteAccountButton" />
 
     <Button
         android:layout_width="wrap_content"
@@ -96,8 +97,8 @@
         android:text="Delete"
         android:id="@+id/deleteAccountButton"
         android:onClick="deleteAccountButtonClicked"
-        android:layout_marginEnd="26dp"
-        android:layout_centerVertical="true"
-        android:layout_alignEnd="@+id/editAccountBankInput" />
+        android:layout_alignTop="@+id/changeAccountButton"
+        android:layout_alignEnd="@+id/editAccountBankInput"
+        android:layout_marginEnd="46dp" />
 
 </RelativeLayout>

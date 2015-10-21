@@ -40,16 +40,15 @@ public class ItemListActivity extends FragmentActivity
      * device.
      */
     private boolean mTwoPane;
-//    static MyData myData;
 
-    private void initDataseAndView(){
+    private void initDatabaseAndView(){
         //init database
 //        this.deleteDatabase(MyData.DATABASE_NAME);
         MyData.myData = new MyData(this, null, null, 1);
         MyData.accountListAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, MyData.accountList);
+                android.R.layout.simple_list_item_1, MyData.displayAccountList);
         MyData.paymentListAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, MyData.paymentList);
+                android.R.layout.simple_list_item_1, MyData.displayPaymentList);
         MyData.myData.updateAccountListView();
         MyData.myData.updatePaymentListView();
 
@@ -73,7 +72,7 @@ public class ItemListActivity extends FragmentActivity
                     .setActivateOnItemClick(true);
         }
 
-        initDataseAndView();
+        initDatabaseAndView();
 
 //
     }

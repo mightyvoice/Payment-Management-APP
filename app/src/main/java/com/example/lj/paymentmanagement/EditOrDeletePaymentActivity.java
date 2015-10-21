@@ -6,25 +6,30 @@ import android.content.DialogInterface;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
-public class EditOrDeletePaymentActivity extends ActionBarActivity {
+import java.util.ArrayList;
+import java.util.Collections;
 
-    private EditText paidAccountNameInput;
-    private EditText payAccountNameInput;
-    private EditText payAmountInput;
-    private TextView payDateInput;
+public class EditOrDeletePaymentActivity extends ActionBarActivity {
+    private Spinner  editPayAccountSpinner;
+    private EditText editPaidAccountNameInput;
+    private EditText editPayAmountInput;
+    private TextView editPayDayInput;
 
     private Integer payYear;
     private Integer payMonth;
     private Integer payDay;
     private String payDateToString;
+    private ArrayList<String> payAccountList = new ArrayList<String>();
+    private ArrayAdapter<String> payAccountSpinnerAdapter = null;
+    private String selectedAccountName = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,17 +42,19 @@ public class EditOrDeletePaymentActivity extends ActionBarActivity {
         int width = ds.widthPixels;
         int height = ds.heightPixels;
 
-        getWindow().setLayout((int) (width * 0.6), (int) (height * 0.7));
+        getWindow().setLayout(
+                (int) (width * MyConfigure.NEW_ACTIVITY_WIDTH_RATIO),
+                (int) (height * MyConfigure.NEW_ACTIVITY_HEIGHT_RATIO));
 
-        paidAccountNameInput = (EditText) findViewById(R.id.paidAccountNameInput);
-        payAccountNameInput = (EditText) findViewById(R.id.payAccountNameInput);
-        payAmountInput = (EditText) findViewById(R.id.payAmountInput);
-        payDateInput = (TextView) findViewById(R.id.editPayDayInput);
+        editPayAccountSpinner = (Spinner) findViewById(R.id.editPayAccoutSpinner);
+        editPaidAccountNameInput = (EditText) findViewById(R.id.editPaidAccountNameInput);
+        editPayAmountInput = (EditText) findViewById(R.id.editPayAmountInput);
+        editPayDayInput = (TextView) findViewById(R.id.editPayDayInput);
 
-        payAccountNameInput.setText(MyData.selectedPaymentItem.payAccountName);
-        paidAccountNameInput.setText(MyData.selectedPaymentItem.paidAccountName);
-        payAmountInput.setText(MyData.selectedPaymentItem.payAmount.toString());
+        editPaidAccountNameInput.setText(MyData.selectedPaymentItem.paidAccountName);
+        editPayAmountInput.setText(MyData.selectedPaymentItem.payAmount.toString());
 
+        initPayAccountSpinner();
         initPayDateInput();
     }
 
@@ -57,8 +64,8 @@ public class EditOrDeletePaymentActivity extends ActionBarActivity {
         payMonth = Integer.parseInt(tmp[1]);
         payDay = Integer.parseInt(tmp[2]);
         payDateToString = payYear+"/"+payMonth+"/"+payDay;
-        payDateInput.setText(payDateToString);
-        payDateInput.setOnClickListener(new View.OnClickListener() {
+        editPayDayInput.setText(payDateToString);
+        editPayDayInput.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(
@@ -77,9 +84,35 @@ public class EditOrDeletePaymentActivity extends ActionBarActivity {
                     payMonth = monthOfYear+1;
                     payDay = dayOfMonth;
                     payDateToString = payYear+"/"+payMonth+"/"+payDay;
-                    payDateInput.setText(payDateToString);
+                    editPayDayInput.setText(payDateToString);
                 }
             };
+
+    public void initPayAccountSpinner(){
+        payAccountList.clear();
+        MyAccount.paidTimesReverseSortFlag = true;
+        Collections.sort(MyData.allMyAccounts, MyAccount.paidTimesComparator);
+        MyAccount.paidTimesReverseSortFlag = false;
+        for(MyAccount account: MyData.allMyAccounts){
+            payAccountList.add(account.accountName + " from " + account.bankName);
+        }
+        payAccountSpinnerAdapter = new ArrayAdapter<String>(
+                this, android.R.layout.simple_spinner_item, payAccountList);
+        payAccountSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        editPayAccountSpinner.setAdapter(payAccountSpinnerAdapter);
+        editPayAccountSpinner.setVisibility(View.VISIBLE);
+        editPayAccountSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedAccountName = payAccountList.get(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
 
     public void deletePaymentButtonClicked(View view){
         new AlertDialog.Builder(this).setTitle("Confirm Delete")
@@ -106,10 +139,10 @@ public class EditOrDeletePaymentActivity extends ActionBarActivity {
 
     public void changePaymentButtonClicked(View view){
         MyData.editPaymentItem = new MyPaymentItem();
-        MyData.editPaymentItem.payAccountName = payAccountNameInput.getText().toString();
-        MyData.editPaymentItem.paidAccountName = paidAccountNameInput.getText().toString();
-        MyData.editPaymentItem.payAmount = Double.parseDouble(payAmountInput.getText().toString());
-        MyData.editPaymentItem.payDate = payDateInput.getText().toString();
+        MyData.editPaymentItem.payAccountName = MyLib.captureLongName(MyLib.getRealAccountNameFromInput(selectedAccountName));
+        MyData.editPaymentItem.paidAccountName = MyLib.captureLongName(editPaidAccountNameInput.getText().toString());
+        MyData.editPaymentItem.payAmount = Double.parseDouble(editPayAmountInput.getText().toString());
+        MyData.editPaymentItem.payDate = editPayDayInput.getText().toString();
 
         new AlertDialog.Builder(this).setTitle("Confirm Change")
                 .setMessage("Confirm to change the payment : $"+
@@ -134,28 +167,5 @@ public class EditOrDeletePaymentActivity extends ActionBarActivity {
             public void onClick(DialogInterface dialog, int which) {
             }
         }).show();
-
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_edit_or_delete_payment, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }

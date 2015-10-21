@@ -73,6 +73,7 @@ public class ItemDetailFragment extends Fragment {
         // Show the dummy content as text in a TextView.
         if (mItem != null) {
             if(mItem.item_name == "Account") {
+                getActivity().setTitle("Account Information");
                 rootView = inflater.inflate(R.layout.fragment_account_list, container, false);
                 accountListView = (ListView) rootView.findViewById(R.id.accountListView);
                 accountListView.setAdapter(MyData.accountListAdapter);
@@ -80,6 +81,7 @@ public class ItemDetailFragment extends Fragment {
                 MyData.myData.updateAccountListView();
             }
             if(mItem.item_name == "Payment List"){
+                getActivity().setTitle("Payment Information");
                 rootView = inflater.inflate(R.layout.fragment_payment_list, container, false);
                 paymentListView = (ListView) rootView.findViewById(R.id.paymentListView);
                 paymentListView.setAdapter(MyData.paymentListAdapter);
@@ -117,7 +119,7 @@ public class ItemDetailFragment extends Fragment {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> parent,
                                                    View view, int position, long id) {
-                        if (position == MyData.paymentList.size() - 1) {
+                        if (position == MyData.displayPaymentList.size() - 1) {
                             Toast.makeText(getActivity(),
                                     "This item cannot be deleted or edited", Toast.LENGTH_LONG).show();
                             return true;
