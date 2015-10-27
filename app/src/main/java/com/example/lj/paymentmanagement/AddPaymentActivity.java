@@ -92,18 +92,20 @@ public class AddPaymentActivity extends ActionBarActivity {
     public void initPayAccountSpinner(){
 
         payAccountList.clear();
-        MyAccount.paidTimesReverseSortFlag = true;
-        Collections.sort(MyData.allMyAccounts, MyAccount.paidTimesComparator);
         MyAccount.paidTimesReverseSortFlag = false;
+        Collections.sort(MyData.allMyAccounts, MyAccount.accountNameComparator);
+//        MyAccount.paidTimesReverseSortFlag = false;
         for(MyAccount account: MyData.allMyAccounts){
             payAccountList.add(account.accountName + " from " + account.bankName);
         }
         payAccountSpinnerAdapter = new ArrayAdapter<String>(
                 this, android.R.layout.simple_spinner_item, payAccountList);
-        payAccountSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        payAccountSpinnerAdapter.setDropDownViewResource(
+                android.R.layout.simple_spinner_dropdown_item);
         payAccountSpinner.setAdapter(payAccountSpinnerAdapter);
         payAccountSpinner.setVisibility(View.VISIBLE);
-        payAccountSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        payAccountSpinner.setOnItemSelectedListener(
+                new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selectedAccountName = payAccountList.get(position);
@@ -118,14 +120,14 @@ public class AddPaymentActivity extends ActionBarActivity {
 
     public void addPaymentButtonClicked(View view){
 
-        String amount = payAmountInput.getText().toString();
+        Double amount;
         try{
-            Double.parseDouble(amount);
+            amount = Double.parseDouble(payAmountInput.getText().toString());
         }catch (Exception e){
-            payAmountInput.setText("0");
+            amount = 0.0;
         }
 
-        if(Double.parseDouble(payAmountInput.getText().toString()) == 0.0){
+        if(amount == 0.0){
             new AlertDialog.Builder(this).setTitle("Amount Error")
                     .setMessage("Pay Amount Cannot Be $0")
                     .setNegativeButton("Return", new DialogInterface.OnClickListener() {
@@ -136,9 +138,11 @@ public class AddPaymentActivity extends ActionBarActivity {
         }
         else {
             MyData.newPaymentItem = new MyPaymentItem(
-                    MyLib.captureLongName(MyLib.getRealAccountNameFromInput(selectedAccountName)),
-                    MyLib.captureLongName(paidAccountNameInput.getText().toString()),
-                    new Double(Double.parseDouble(payAmountInput.getText().toString())),
+                    MyLib.captureLongName(
+                            MyLib.getRealAccountNameFromInput(selectedAccountName)),
+                    MyLib.captureLongName(
+                            paidAccountNameInput.getText().toString()),
+                    amount,
                     payDateToString
             );
 

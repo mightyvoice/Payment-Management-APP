@@ -1,14 +1,17 @@
 package com.example.lj.paymentmanagement;
 
 import android.app.AlertDialog;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
+import android.content.res.Resources;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.EditText;
 
-public class AddAccountActivity extends ActionBarActivity {
+public class AddAccountActivity extends ActionBarActivity{
 
     public EditText addAccountNameInput;
     public EditText addAccountBankInput;
@@ -22,6 +25,11 @@ public class AddAccountActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_account);
 
+        resizeDisplay();
+
+    }
+
+    public void resizeDisplay(){
         DisplayMetrics ds = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(ds);
 
@@ -52,17 +60,17 @@ public class AddAccountActivity extends ActionBarActivity {
         try{
             staDay = Integer.parseInt(addAccountStaDayInput.getText().toString());
         }catch (Exception e){
-            staDay = 1;
+            staDay = 0;
         }
         try{
             dueDay = Integer.parseInt(addAccountDueDayInput.getText().toString());
         }catch (Exception e){
-            dueDay = 1;
+            dueDay = 0;
         }
         try{
             staBalance = Double.parseDouble(addAccountStaBalanceInput.getText().toString());
         }catch (Exception e){
-            staBalance = 0;
+            staBalance = -1.0;
         }
 
         if(MyData.ifAccountAlreadyExist(accountName)){
@@ -113,5 +121,4 @@ public class AddAccountActivity extends ActionBarActivity {
             finish();
         }
     }
-
 }

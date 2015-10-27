@@ -53,6 +53,7 @@ public class MyData extends SQLiteOpenHelper{
     private static final String COLUMN_ACCOUNT_DUEDAY = "accountDueDay";
     private static final String COLUMN_ACCOUNT_STA_BALANCE = "accountStaBalance";
     private static final String COLUMN_ACCOUNT_STA_DAY = "accountStaDay";
+    private static final String COLUMN_ACCOUNT_PUR_APR = "accountPurchaseAPR";
 
     //column names for the payment table
     private static final String TABLE_PAYMENTS = "myPayments";
@@ -105,6 +106,11 @@ public class MyData extends SQLiteOpenHelper{
         onCreate(db);
     }
 
+
+
+///////////////////Account operations/////////////////////
+///////////////////Account operations/////////////////////
+
     public void updateAllAccountsFromDatabase(){
         allMyAccounts.clear();
         SQLiteDatabase db = this.getWritableDatabase();
@@ -147,12 +153,13 @@ public class MyData extends SQLiteOpenHelper{
                 totalNeedToPay += account.toPayBalance;
             }
         }
-        displayAccountList.add("Total Balance Need To Pay: $"
-                + totalNeedToPay.toString());
+        displayAccountList.add("Total " +
+                new Integer(allMyAccounts.size()).toString() +
+                " Accounts and Total Balance To Pay: $" +
+                totalNeedToPay.toString());
         accountListAdapter.notifyDataSetChanged();
     }
 
-    //add a new row to the myAccounts table
     public void addAccountToDatabase(MyAccount myAccount){
         allMyAccounts.add(myAccount);
         ContentValues values = new ContentValues();
@@ -323,7 +330,6 @@ public class MyData extends SQLiteOpenHelper{
         paymentListAdapter.notifyDataSetChanged();
     }
 
-    //add a new payment to the myAccounts table
     public void addPaymentToDatabase(MyPaymentItem myPayment){
         allMyPaymentItems.add(myPayment);
         ContentValues values = new ContentValues();
@@ -331,7 +337,6 @@ public class MyData extends SQLiteOpenHelper{
         values.put(COLUMN_PAID_ACCOUNT, myPayment.paidAccountName);
         values.put(COLUMN_PAY_AMOUNT, myPayment.payAmount);
         values.put(COLUMN_PAY_DATE, myPayment.payDate);
-//        values.put(COLUMN_PAY_TOTAL_THIS_MONTH, 0);
         SQLiteDatabase db = getWritableDatabase();
         db.insert(TABLE_PAYMENTS, null, values);
         db.close();

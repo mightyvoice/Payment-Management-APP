@@ -7,9 +7,12 @@
         android:layout_height="wrap_content"
         android:id="@+id/addPaymentButton"
         android:text="Add New Payment"
-        android:layout_margin="30dp"
         android:onClick="addPaymentButtonClicked"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="5dp" />
 
     <LinearLayout
         android:orientation="horizontal"

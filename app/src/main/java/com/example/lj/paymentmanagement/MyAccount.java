@@ -16,6 +16,7 @@ public class MyAccount {
     //balance
     public Double statementBalance;
     public Double currentBalance;
+    public Double purchaseAPR;
     public Double toPayBalance;
     public Double totalPayThisMonth;
 

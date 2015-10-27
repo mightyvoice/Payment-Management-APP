@@ -7,3 +7,4 @@ public class MyConfigure {
     static Double NEW_ACTIVITY_WIDTH_RATIO = 0.8;
     static Double NEW_ACTIVITY_HEIGHT_RATIO = 0.8;
 }
+

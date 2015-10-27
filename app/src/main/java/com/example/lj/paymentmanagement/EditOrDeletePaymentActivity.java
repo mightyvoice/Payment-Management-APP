@@ -90,9 +90,9 @@ public class EditOrDeletePaymentActivity extends ActionBarActivity {
 
     public void initPayAccountSpinner(){
         payAccountList.clear();
-        MyAccount.paidTimesReverseSortFlag = true;
-        Collections.sort(MyData.allMyAccounts, MyAccount.paidTimesComparator);
         MyAccount.paidTimesReverseSortFlag = false;
+        Collections.sort(MyData.allMyAccounts, MyAccount.accountNameComparator);
+//        MyAccount.paidTimesReverseSortFlag = false;
         for(MyAccount account: MyData.allMyAccounts){
             payAccountList.add(account.accountName + " from " + account.bankName);
         }
