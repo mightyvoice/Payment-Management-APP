@@ -1,10 +1,102 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.lj.paymentmanagement.AllAccountsListFragment">
+    android:weightSum="1">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-</FrameLayout>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/addAccountButton"
+            android:text="Add New Account"
+            android:onClick="addAccountButtonClicked"
+            android:layout_gravity="center_horizontal" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/addPaymentMainPageButton"
+            android:text="Add Payment"
+            android:onClick="addPaymentMainPageButtonClicked" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:weightSum="1"
+        android:layout_marginBottom="5dp">
+
+        <Button
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:id="@+id/accountNameLabelButton"
+            android:onClick="accountNameLabelButtonClicked"
+            android:textSize="12dp" />
+
+        <Button
+            android:layout_width="53dp"
+            android:layout_height="wrap_content"
+            android:text="Bank"
+            android:id="@+id/accountBankNameLabelButton"
+            android:onClick="accountBankNameLabelButtonClicked"
+            android:textSize="12dp"
+            android:layout_weight="0.10" />
+
+        <Button
+            android:layout_width="44dp"
+            android:layout_height="wrap_content"
+            android:text="Due"
+            android:id="@+id/accountDueDayLabelButton"
+            android:onClick="accountDueDayLabelButtonClicked"
+            android:textSize="12dp"
+            android:layout_weight="0.23" />
+
+        <Button
+            android:layout_width="52dp"
+            android:layout_height="wrap_content"
+            android:text="Sta"
+            android:id="@+id/accountStaBalanceLabelButton"
+            android:onClick="accountStaBalanceLabelButtonClicked"
+            android:textSize="12dp" />
+
+        <Button
+            android:layout_width="52dp"
+            android:layout_height="wrap_content"
+            android:text="Pay"
+            android:id="@+id/accountToPayLabelButton"
+            android:onClick="accountToPayLabelButtonClicked"
+            android:textSize="12dp" />
+
+        <Button
+            android:layout_width="49dp"
+            android:layout_height="wrap_content"
+            android:text="APR"
+            android:id="@+id/accountAPRLabelButton"
+            android:onClick="accountAPRLabelButtonClicked"
+            android:textSize="12dp" />
+
+        <Button
+            android:layout_width="41dp"
+            android:layout_height="wrap_content"
+            android:text="INT"
+            android:id="@+id/accounInterestLabelButton"
+            android:onClick="accountInterestLabelButtonClicked"
+            android:textSize="12dp"
+            android:layout_weight="0.32" />
+
+    </LinearLayout>
+
+    <ListView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/accountListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>

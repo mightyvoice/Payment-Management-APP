@@ -83,7 +83,8 @@ public class MyData extends SQLiteOpenHelper{
                 COLUMN_ACCOUNT_BANK + " TEXT, " +
                 COLUMN_ACCOUNT_DUEDAY + " INTEGER, " +
                 COLUMN_ACCOUNT_STA_DAY + " INTEGER, " +
-                COLUMN_ACCOUNT_STA_BALANCE + " DOUBLE " +
+                COLUMN_ACCOUNT_STA_BALANCE + " DOUBLE, " +
+                COLUMN_ACCOUNT_PUR_APR + " DOUBLE " +
                 ");";
         db.execSQL(query);
 
@@ -124,7 +125,8 @@ public class MyData extends SQLiteOpenHelper{
                         cursor.getString(cursor.getColumnIndex(COLUMN_ACCOUNT_BANK)),
                         new Integer(cursor.getInt(cursor.getColumnIndex(COLUMN_ACCOUNT_DUEDAY))),
                         new Integer(cursor.getInt(cursor.getColumnIndex(COLUMN_ACCOUNT_STA_DAY))),
-                        new Double(cursor.getDouble(cursor.getColumnIndex(COLUMN_ACCOUNT_STA_BALANCE))));
+                        new Double(cursor.getDouble(cursor.getColumnIndex(COLUMN_ACCOUNT_STA_BALANCE))),
+                        new Double(cursor.getDouble(cursor.getColumnIndex(COLUMN_ACCOUNT_PUR_APR))));
                 allMyAccounts.add(tmp);
             }
             cursor.moveToNext();
@@ -145,18 +147,23 @@ public class MyData extends SQLiteOpenHelper{
     }
 
     public void updateAccountListView(){
+//        updateAllAccountsFromDatabase();
         displayAccountList.clear();
         Double totalNeedToPay = 0.0;
+        Double totalInterest = 0.0;
         for(MyAccount account: allMyAccounts){
             displayAccountList.add(account.toString());
             if(account.toPayBalance > 0.0){
                 totalNeedToPay += account.toPayBalance;
             }
+            totalInterest += account.toPayInterest;
         }
         displayAccountList.add("Total " +
                 new Integer(allMyAccounts.size()).toString() +
-                " Accounts and Total Balance To Pay: $" +
-                totalNeedToPay.toString());
+                " Accounts\nTotal Balance To Pay: $" +
+                MyLib.roundTo2DecimalPoints(totalNeedToPay).toString() +
+                        "\nTotal Interest: $" +
+                MyLib.roundTo2DecimalPoints(totalInterest).toString());
         accountListAdapter.notifyDataSetChanged();
     }
 
@@ -168,6 +175,7 @@ public class MyData extends SQLiteOpenHelper{
         values.put(COLUMN_ACCOUNT_DUEDAY, myAccount.dueDay);
         values.put(COLUMN_ACCOUNT_STA_DAY, myAccount.staDay);
         values.put(COLUMN_ACCOUNT_STA_BALANCE, myAccount.statementBalance);
+        values.put(COLUMN_ACCOUNT_PUR_APR, myAccount.purchaseAPR);
         SQLiteDatabase db = getWritableDatabase();
         db.insert(TABLE_ACCOUNTS, null, values);
         db.close();
@@ -259,7 +267,7 @@ public class MyData extends SQLiteOpenHelper{
         updateAllAccountsFromDatabase();
         updateAllMyPaymentItemsFromDatabase();
         updateAccountListView();
-        updatePaymentListView();
+//        updatePaymentListView();
     }
 
     public void changeSelectedAccount(){
@@ -280,7 +288,9 @@ public class MyData extends SQLiteOpenHelper{
                 COLUMN_ACCOUNT_NAME + "=\"" + editAccount.accountName + "\", "+
                 COLUMN_ACCOUNT_BANK + "=\"" + editAccount.bankName + "\", "+
                 COLUMN_ACCOUNT_STA_BALANCE + "=" + editAccount.statementBalance.toString() + ", " +
-                COLUMN_ACCOUNT_DUEDAY + "=" + editAccount.dueDay.toString() +
+                COLUMN_ACCOUNT_DUEDAY + "=" + editAccount.dueDay.toString() + ", " +
+                COLUMN_ACCOUNT_STA_DAY + "=" + editAccount.staDay.toString() + ", " +
+                COLUMN_ACCOUNT_PUR_APR + "=" + editAccount.purchaseAPR.toString() +
                 " WHERE " +
                 COLUMN_ACCOUNT_NAME + "=\"" + selectedAccount.accountName +"\" AND " +
                 COLUMN_ACCOUNT_BANK + "=\"" + selectedAccount.bankName + "\"";
@@ -321,6 +331,7 @@ public class MyData extends SQLiteOpenHelper{
     }
 
     public void updatePaymentListView(){
+//        updateAllMyPaymentItemsFromDatabase();
         displayPaymentList.clear();
         for(MyPaymentItem paymentItem: allMyPaymentItems){
             displayPaymentList.add(paymentItem.toString());

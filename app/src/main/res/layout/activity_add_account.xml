@@ -33,8 +33,9 @@
         android:text="Add"
         android:id="@+id/addAccountButton"
         android:onClick="addNewAccountButtonClicked"
-        android:layout_below="@+id/addAccountStaBalanceInput"
-        android:layout_toEndOf="@+id/addAccountStaBalanceLabel" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/addAccountStaBalanceInput"
+        android:layout_marginBottom="36dp" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -108,5 +109,24 @@
         android:layout_marginTop="41dp"
         android:layout_below="@+id/addPaidAccountNameInput"
         android:layout_toEndOf="@+id/addAccountStaBalanceLabel" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="APR(%)"
+        android:id="@+id/addAccountAPRLebel"
+        android:textSize="20dp"
+        android:layout_below="@+id/addAccountStaBalanceInput"
+        android:layout_alignEnd="@+id/addAccountStaDayLabel"
+        android:layout_marginTop="33dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="date"
+        android:ems="10"
+        android:id="@+id/addAccountAPRInput"
+        android:layout_alignBottom="@+id/addAccountAPRLebel"
+        android:layout_alignStart="@+id/addAccountStaBalanceInput" />
 
 </RelativeLayout>

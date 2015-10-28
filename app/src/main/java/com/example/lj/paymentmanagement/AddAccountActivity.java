@@ -18,6 +18,7 @@ public class AddAccountActivity extends ActionBarActivity{
     public EditText addAccountDueDayInput;
     public EditText addAccountStaBalanceInput;
     public EditText addAccountStaDayInput;
+    public EditText addAccountAPRInput;
 //    public Button addNewAccountButton;
 
     @Override
@@ -25,7 +26,7 @@ public class AddAccountActivity extends ActionBarActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_account);
 
-        resizeDisplay();
+//        resizeDisplay();
 
     }
 
@@ -47,11 +48,13 @@ public class AddAccountActivity extends ActionBarActivity{
         addAccountDueDayInput = (EditText)findViewById(R.id.addAccountDueDayInput);
         addAccountStaDayInput = (EditText)findViewById(R.id.addAccountStaDayInput);
         addAccountStaBalanceInput = (EditText)findViewById(R.id.addAccountStaBalanceInput);
+        addAccountAPRInput = (EditText)findViewById(R.id.addAccountAPRInput);
 
         String accountName;
         int staDay;
         int dueDay;
-        double staBalance;
+        double staBalance = -1.0;
+        double APR = -1.0;
         try {
             accountName = MyLib.captureName(addAccountNameInput.getText().toString());
         }catch (Exception e){
@@ -69,6 +72,11 @@ public class AddAccountActivity extends ActionBarActivity{
         }
         try{
             staBalance = Double.parseDouble(addAccountStaBalanceInput.getText().toString());
+        }catch (Exception e){
+            staBalance = -1.0;
+        }
+        try{
+            APR = Double.parseDouble(addAccountAPRInput.getText().toString());
         }catch (Exception e){
             staBalance = -1.0;
         }
@@ -109,13 +117,23 @@ public class AddAccountActivity extends ActionBarActivity{
                         }
                     }).show();
         }
+        else if(APR < 0.0 || APR > 100){
+            new AlertDialog.Builder(this).setTitle("APR Input Error")
+                    .setMessage("The input APR is out of scope")
+                    .setNegativeButton("Return", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    }).show();
+        }
         else {
             MyData.newAccount = new MyAccount(
                     MyLib.captureLongName(addAccountNameInput.getText().toString()),
                     MyLib.captureLongName(addAccountBankInput.getText().toString()),
                     dueDay,
                     staDay,
-                    staBalance
+                    staBalance,
+                    APR
             );
             MyData.myData.addAccountToDatabase(MyData.newAccount);
             finish();

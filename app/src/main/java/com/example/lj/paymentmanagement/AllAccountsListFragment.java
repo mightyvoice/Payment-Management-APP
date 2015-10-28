@@ -29,7 +29,7 @@ public class AllAccountsListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = null;
-        rootView = inflater.inflate(R.layout.fragment_account_list, container, false);
+        rootView = inflater.inflate(R.layout.fragment_all_accounts_list, container, false);
         accountListView = (ListView) rootView.findViewById(R.id.accountListView);
         accountListView.setAdapter(MyData.accountListAdapter);
         registerAccountListViewItemClicked();

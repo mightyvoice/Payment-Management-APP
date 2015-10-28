@@ -29,7 +29,7 @@ public class AllPaymentsListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = null;
-        rootView = inflater.inflate(R.layout.fragment_payment_list, container, false);
+        rootView = inflater.inflate(R.layout.fragment_all_payments_list, container, false);
         paymentListView = (ListView) rootView.findViewById(R.id.paymentListView);
         paymentListView.setAdapter(MyData.paymentListAdapter);
         registerPaymentListViewItemClicked();

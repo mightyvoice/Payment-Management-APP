@@ -6,7 +6,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.example.lj.paymentmanagement.EditOrDeleteAccountActivity"
-    android:background="#92ffdf">
+    android:background="#92ffdf" >
 
     <TextView
         android:layout_width="wrap_content"
@@ -32,9 +32,9 @@
         android:text="Make Change"
         android:id="@+id/changeAccountButton"
         android:onClick="changeAccountButtonClicked"
-        android:layout_below="@+id/editAccountStaBalanceInput"
-        android:layout_toStartOf="@+id/editAccountStaBalanceInput"
-        android:layout_marginTop="60dp" />
+        android:layout_marginTop="37dp"
+        android:layout_below="@+id/APRLabel"
+        android:layout_toEndOf="@+id/editAccountBankLabel" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -42,7 +42,7 @@
         android:id="@+id/editAccountBankInput"
         android:width="200dp"
         android:layout_below="@+id/editAccountDueDayInput"
-        android:layout_alignStart="@+id/editAccountDueDayInput" />
+        android:layout_toEndOf="@+id/changeAccountButton" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -69,8 +69,8 @@
         android:inputType="date"
         android:ems="10"
         android:id="@+id/editAccountDueDayInput"
-        android:layout_alignTop="@+id/editDueDayLabel"
-        android:layout_alignParentEnd="true" />
+        android:layout_below="@+id/editAccountNameInput"
+        android:layout_toEndOf="@+id/changeAccountButton" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -79,8 +79,8 @@
         android:id="@+id/toPayLabel"
         android:textSize="20dp"
         android:layout_below="@+id/editAccountBankLabel"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="47dp" />
+        android:layout_alignParentStart="false"
+        android:layout_marginTop="35dp" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -89,7 +89,8 @@
         android:ems="10"
         android:id="@+id/editAccountStaBalanceInput"
         android:layout_alignTop="@+id/toPayLabel"
-        android:layout_alignStart="@+id/deleteAccountButton" />
+        android:layout_alignStart="@+id/editAccountBankInput"
+        android:layout_alignParentEnd="false" />
 
     <Button
         android:layout_width="wrap_content"
@@ -98,7 +99,43 @@
         android:id="@+id/deleteAccountButton"
         android:onClick="deleteAccountButtonClicked"
         android:layout_alignTop="@+id/changeAccountButton"
-        android:layout_alignEnd="@+id/editAccountBankInput"
-        android:layout_marginEnd="46dp" />
+        android:layout_alignEnd="@+id/editAccountAPRInput" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sta Day"
+        android:id="@+id/textView"
+        android:textSize="20dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="date"
+        android:ems="10"
+        android:id="@+id/editAccountStaDayInput"
+        android:layout_alignBottom="@+id/textView"
+        android:layout_alignStart="@+id/editAccountStaBalanceInput" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="APR(%)"
+        android:id="@+id/APRLabel"
+        android:textSize="20dp"
+        android:layout_marginTop="36dp"
+        android:layout_below="@+id/textView"
+        android:layout_alignEnd="@+id/textView" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="date"
+        android:ems="10"
+        android:id="@+id/editAccountAPRInput"
+        android:layout_alignBottom="@+id/APRLabel"
+        android:layout_toEndOf="@+id/changeAccountButton" />
 
 </RelativeLayout>

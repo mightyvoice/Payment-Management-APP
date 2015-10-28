@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 
 import java.util.Collections;
 
@@ -22,8 +21,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
     AllAccountsListFragment allAccountsListFragment;
     AllPaymentsListFragment allPaymentsListFragment;
 
-    Button button;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,8 +29,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         initActionbar();
         initDatabaseAndView();
         initAllAccountsListFragment();
-
-        Log.d("size: ", new Integer(MyData.displayAccountList.size()).toString());
     }
 
     void initActionbar(){
@@ -59,7 +54,6 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
                 android.R.layout.simple_list_item_1, MyData.displayAccountList);
         MyData.paymentListAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, MyData.displayPaymentList);
-
     }
 
     private void initAllAccountsListFragment(){
@@ -134,6 +128,10 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         startActivity(new Intent(this, AddAccountActivity.class));
     }
 
+    public void addPaymentMainPageButtonClicked(View view){
+        startActivity(new Intent(this, AddPaymentActivity.class));
+    }
+
     public void addPaymentButtonClicked(View view){
         startActivity(new Intent(this, AddPaymentActivity.class));
     }
@@ -171,6 +169,20 @@ public class MainActivity extends ActionBarActivity implements ActionBar.TabList
         Collections.sort(MyData.allMyAccounts, MyAccount.statementBalanceComparator);
         MyData.myData.updateAccountListView();
         MyAccount.statementBalanceReverseSortFlag = !MyAccount.statementBalanceReverseSortFlag;
+    }
+
+    public void accountAPRLabelButtonClicked(View view){
+        MyData.myData.updateAllAccountsFromDatabase();
+        Collections.sort(MyData.allMyAccounts, MyAccount.APRComparator);
+        MyData.myData.updateAccountListView();
+        MyAccount.APRReverseSortFlag = !MyAccount.APRReverseSortFlag;
+    }
+
+    public void accountInterestLabelButtonClicked(View view){
+        MyData.myData.updateAllAccountsFromDatabase();
+        Collections.sort(MyData.allMyAccounts, MyAccount.toPayInterestComparator);
+        MyData.myData.updateAccountListView();
+        MyAccount.toPayInterestReverseSortFlag = !MyAccount.toPayInterestReverseSortFlag;
     }
 
     public void payAccountNameLabelButtonClicked(View view){

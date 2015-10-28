@@ -15,10 +15,10 @@ public class MyAccount {
 
     //balance
     public Double statementBalance;
-    public Double currentBalance;
     public Double purchaseAPR;
     public Double toPayBalance;
     public Double totalPayThisMonth;
+    public Double toPayInterest;
 
     //Date
     public Integer dueDay;
@@ -29,7 +29,8 @@ public class MyAccount {
 
     public MyAccount(String accountName, String bankName, Integer dueDay,
                      Integer staDay,
-                     Double statementBalance){
+                     Double statementBalance,
+                     Double purchaseAPR){
         this.accountName = accountName;
         this.bankName = bankName;
         this.dueDay = dueDay;
@@ -38,15 +39,19 @@ public class MyAccount {
         this.toPayBalance = statementBalance;
         this.totalPayThisMonth = 0.0;
         this.paidTimes = 0;
+        this.purchaseAPR = purchaseAPR;
+        this.toPayInterest = 0.0;
     }
 
     public String toString(){
-        String tmp = ",   ";
+        String tmp = ",  ";
         return this.accountName + tmp +
                 this.bankName + tmp +
                 MyLib.getDateSuffix(this.dueDay) + tmp + "$" +
                 this.statementBalance.toString() + tmp + "$" +
-                this.toPayBalance.toString();
+                this.toPayBalance.toString() +
+                "\nAPR: " + this.purchaseAPR +
+                "%\nInterest to pay: $"+ MyLib.roundTo2DecimalPoints(this.toPayInterest).toString();
     }
 
     public void updateToPayBalance(){
@@ -56,6 +61,7 @@ public class MyAccount {
         else{
             this.toPayBalance = 0.0;
         }
+        this.toPayInterest = this.toPayBalance * this.purchaseAPR/100 / 12;
     }
 
     public static Boolean accountNameReverseSortFlag = false;
@@ -141,4 +147,35 @@ public class MyAccount {
                     }
                 }
             };
+
+    public static Boolean APRReverseSortFlag = false;
+    public static Comparator<MyAccount> APRComparator = new
+            Comparator<MyAccount>() {
+                @Override
+                public int compare(MyAccount x, MyAccount y) {
+                    if(APRReverseSortFlag) {
+                        return -x.purchaseAPR.compareTo(y.purchaseAPR);
+                    }
+                    else{
+                        return x.purchaseAPR.compareTo(y.purchaseAPR);
+                    }
+                }
+            };
+
+    public static Boolean toPayInterestReverseSortFlag = false;
+    public static Comparator<MyAccount> toPayInterestComparator = new
+            Comparator<MyAccount>() {
+                @Override
+                public int compare(MyAccount x, MyAccount y) {
+                    if(toPayInterestReverseSortFlag) {
+                        return -x.toPayInterest.compareTo(y.toPayInterest);
+                    }
+                    else{
+                        return x.toPayInterest.compareTo(y.toPayInterest);
+                    }
+                }
+            };
+
+
 }
+

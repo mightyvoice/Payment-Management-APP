@@ -40,6 +40,20 @@ public class AddPaymentActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_payment);
 
+        resizeDisplay();
+
+        payAccountSpinner = (Spinner) findViewById(R.id.payAccountSpinner);
+        paidAccountNameInput = (EditText) findViewById(R.id.editPaidAccountNameInput);
+        payAmountInput = (EditText) findViewById(R.id.editPayAmountInput);
+        payDateInput = (TextView) findViewById(R.id.payDateInput);
+
+        paidAccountNameInput.setText("BoA");
+
+        initPayAccountSpinner();
+        initPayDateInput();
+    }
+
+    private void resizeDisplay(){
         DisplayMetrics ds = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(ds);
 
@@ -49,14 +63,6 @@ public class AddPaymentActivity extends ActionBarActivity {
         getWindow().setLayout(
                 (int) (width * MyConfigure.NEW_ACTIVITY_WIDTH_RATIO),
                 (int) (height * MyConfigure.NEW_ACTIVITY_HEIGHT_RATIO));
-
-        payAccountSpinner = (Spinner) findViewById(R.id.payAccountSpinner);
-        paidAccountNameInput = (EditText) findViewById(R.id.editPaidAccountNameInput);
-        payAmountInput = (EditText) findViewById(R.id.editPayAmountInput);
-        payDateInput = (TextView) findViewById(R.id.payDateInput);
-
-        initPayAccountSpinner();
-        initPayDateInput();
     }
 
     public void initPayDateInput(){
