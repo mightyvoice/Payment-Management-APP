@@ -63,8 +63,6 @@ public class MyData extends SQLiteOpenHelper{
     private static final String COLUMN_PAY_AMOUNT = "payAmount";
     private static final String COLUMN_PAY_DATE = "payDate";
     private static final String COLUMN_PAY_TOTAL_THIS_MONTH = "payTotalThisMonth";
-
-
     ///////////////////////////////////////////////////
 
     public MyData(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
@@ -168,7 +166,7 @@ public class MyData extends SQLiteOpenHelper{
     }
 
     public void addAccountToDatabase(MyAccount myAccount){
-        allMyAccounts.add(myAccount);
+//        allMyAccounts.add(myAccount);
         ContentValues values = new ContentValues();
         values.put(COLUMN_ACCOUNT_NAME, myAccount.accountName);
         values.put(COLUMN_ACCOUNT_BANK, myAccount.bankName);
@@ -179,6 +177,7 @@ public class MyData extends SQLiteOpenHelper{
         SQLiteDatabase db = getWritableDatabase();
         db.insert(TABLE_ACCOUNTS, null, values);
         db.close();
+        updateAllAccountsFromDatabase();
         updateAccountListView();
     }
 
