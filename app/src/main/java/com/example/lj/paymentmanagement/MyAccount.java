@@ -43,15 +43,16 @@ public class MyAccount {
         this.toPayInterest = 0.0;
     }
 
+    @Override
     public String toString(){
         String tmp = ",  ";
         return this.accountName + tmp +
                 this.bankName + tmp +
                 MyLib.getDateSuffix(this.dueDay) + tmp + "$" +
-                this.statementBalance.toString() + tmp + "$" +
-                this.toPayBalance.toString() +
-                "\nAPR: " + this.purchaseAPR +
-                "%\nInterest to pay: $"+ MyLib.roundTo2DecimalPoints(this.toPayInterest).toString();
+                MyLib.roundTo2DecimalPoints(this.statementBalance).toString() + tmp + "$" +
+                MyLib.roundTo2DecimalPoints(this.toPayBalance).toString() +
+                        "\nAPR: " + this.purchaseAPR +
+                        "%\nInterest to pay: $" + MyLib.roundTo2DecimalPoints(this.toPayInterest).toString();
     }
 
     public void updateToPayBalance(){

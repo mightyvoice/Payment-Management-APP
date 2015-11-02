@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 
 /**
@@ -69,6 +70,9 @@ public class MyData extends SQLiteOpenHelper{
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
         updateAllMyPaymentItemsFromDatabase();
         updateAllAccountsFromDatabase();
+        Collections.sort(allMyAccounts, MyAccount.accountNameComparator);
+        MyPaymentItem.payDateReverseSortFlag = true;
+        Collections.sort(allMyPaymentItems, MyPaymentItem.payDateComparator);
     }
 
     @Override
@@ -160,7 +164,7 @@ public class MyData extends SQLiteOpenHelper{
                 new Integer(allMyAccounts.size()).toString() +
                 " Accounts\nTotal Balance To Pay: $" +
                 MyLib.roundTo2DecimalPoints(totalNeedToPay).toString() +
-                        "\nTotal Interest: $" +
+                "\nTotal Interest: $" +
                 MyLib.roundTo2DecimalPoints(totalInterest).toString());
         accountListAdapter.notifyDataSetChanged();
     }
@@ -190,38 +194,23 @@ public class MyData extends SQLiteOpenHelper{
         return false;
     }
 
-    private Double getAccountAlreadyPaidAmount(String accountName){
-        SQLiteDatabase db = this.getWritableDatabase();
-        String query = "SELECT * FROM " + TABLE_PAYMENTS +
-                " WHERE " + COLUMN_PAY_ACCOUNT + "=\"" + accountName + "\"";
-        Cursor cursor = db.rawQuery(query, null);
-        cursor.moveToFirst();
-        Double totalPaidAmount = 0.0;
-        while(!cursor.isAfterLast()){
-            totalPaidAmount += cursor.getDouble(
-                    cursor.getColumnIndex(COLUMN_PAY_AMOUNT));
-            cursor.moveToNext();
-        }
-        db.close();
-        return new Double(totalPaidAmount);
-    }
-
     private Double getAccountAlreadyPaidAmountCurrentBillingCycle(MyAccount account){
         updateAllMyPaymentItemsFromDatabase();
         Calendar c = Calendar.getInstance();
-        int curDay = c.get(Calendar.DAY_OF_MONTH);
-        int dueDay = account.dueDay;
         int staDay = account.staDay;
-        int staMonth = c.get(Calendar.MONTH)+1;
-        int staYear = c.get(Calendar.YEAR);
+        int curDay = c.get(Calendar.DAY_OF_MONTH);
+        int curMonth = c.get(Calendar.MONTH)+1;
+        int curYear = c.get(Calendar.YEAR);
         Double total = 0.0;
         for(int i = 0; i < allMyPaymentItems.size(); i++){
             if(allMyPaymentItems.get(i).payAccountName.equals(account.accountName)){
                 int payDay = Integer.parseInt(allMyPaymentItems.get(i).payDate.split("/")[2]);
                 int payMonth = Integer.parseInt(allMyPaymentItems.get(i).payDate.split("/")[1]);
                 int payYear = Integer.parseInt(allMyPaymentItems.get(i).payDate.split("/")[0]);
-                if((payDay > staDay && payMonth == staMonth && payYear== staYear) ||
-                        (payDay <= staDay && payMonth == staMonth && payYear == staYear)){
+                if((payDay > staDay && curDay > staDay && payMonth == curMonth && payYear== curYear) ||
+                        (payDay <= staDay && curDay <= staDay && payMonth == curMonth && payYear== curYear) ||
+                        (payDay > staDay && curDay <= staDay && payMonth - curMonth == -1 && payYear == curYear) ||
+                        (payDay > staDay && curDay <= staDay && payMonth == 12 && curMonth == 1 && payYear - curYear == -1)){
                     total += allMyPaymentItems.get(i).payAmount;
                 }
             }
@@ -421,5 +410,4 @@ public class MyData extends SQLiteOpenHelper{
         db.close();
         return MyLib.roundTo2DecimalPoints(totalBalance);
     }
-
 }
