@@ -344,6 +344,7 @@ public class MyData extends SQLiteOpenHelper{
         updateAllMyPaymentItemsFromDatabase();
 
         updatePaymentListView();
+        updateAccountListView();
 
     }
 
