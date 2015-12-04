@@ -321,6 +321,8 @@ public class MyData extends SQLiteOpenHelper{
     public void updatePaymentListView(){
 //        updateAllMyPaymentItemsFromDatabase();
         displayPaymentList.clear();
+        MyPaymentItem.payDateReverseSortFlag = true;
+        Collections.sort(MyData.allMyPaymentItems, MyPaymentItem.payDateComparator);
         for(MyPaymentItem paymentItem: allMyPaymentItems){
             displayPaymentList.add(paymentItem.toString());
         }
@@ -404,8 +406,14 @@ public class MyData extends SQLiteOpenHelper{
         cursor.moveToFirst();
         Double totalBalance = 0.0;
         while(!cursor.isAfterLast()){
-            totalBalance += cursor.getDouble(
-                    cursor.getColumnIndex(COLUMN_PAY_AMOUNT));
+            Integer month = Integer.parseInt(cursor.getString(
+                    cursor.getColumnIndex(COLUMN_PAY_DATE)).split("/")[1]);
+            Calendar c = Calendar.getInstance();
+            Integer curMonth = c.get(Calendar.MONTH)+1;
+            if(month == curMonth) {
+                totalBalance += cursor.getDouble(
+                        cursor.getColumnIndex(COLUMN_PAY_AMOUNT));
+            }
             cursor.moveToNext();
         }
         db.close();

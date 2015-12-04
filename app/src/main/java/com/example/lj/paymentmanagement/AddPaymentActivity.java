@@ -98,9 +98,8 @@ public class AddPaymentActivity extends ActionBarActivity {
     public void initPayAccountSpinner(){
 
         payAccountList.clear();
-        MyAccount.paidTimesReverseSortFlag = false;
+        MyAccount.accountNameReverseSortFlag = false;
         Collections.sort(MyData.allMyAccounts, MyAccount.accountNameComparator);
-//        MyAccount.paidTimesReverseSortFlag = false;
         for(MyAccount account: MyData.allMyAccounts){
             payAccountList.add(account.accountName + " from " + account.bankName);
         }
