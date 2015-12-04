@@ -121,7 +121,7 @@ public class MyAccount {
                 }
             };
 
-    public static Boolean statementBalanceReverseSortFlag = false;
+    public static Boolean statementBalanceReverseSortFlag = true;
     public static Comparator<MyAccount> statementBalanceComparator = new
             Comparator<MyAccount>() {
                 @Override
@@ -135,7 +135,7 @@ public class MyAccount {
                 }
             };
 
-    public static Boolean toPayBalanceReverseSortFlag = false;
+    public static Boolean toPayBalanceReverseSortFlag = true;
     public static Comparator<MyAccount> toPayBalanceeComparator = new
             Comparator<MyAccount>() {
                 @Override
@@ -149,7 +149,7 @@ public class MyAccount {
                 }
             };
 
-    public static Boolean APRReverseSortFlag = false;
+    public static Boolean APRReverseSortFlag = true;
     public static Comparator<MyAccount> APRComparator = new
             Comparator<MyAccount>() {
                 @Override
@@ -163,7 +163,7 @@ public class MyAccount {
                 }
             };
 
-    public static Boolean toPayInterestReverseSortFlag = false;
+    public static Boolean toPayInterestReverseSortFlag = true;
     public static Comparator<MyAccount> toPayInterestComparator = new
             Comparator<MyAccount>() {
                 @Override

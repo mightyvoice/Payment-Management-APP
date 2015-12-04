@@ -11,6 +11,8 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.Collections;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,6 +36,9 @@ public class AllAccountsListFragment extends Fragment {
         accountListView.setAdapter(MyData.accountListAdapter);
         accountListView.setSelectionAfterHeaderView();
         registerAccountListViewItemClicked();
+        MyData.myData.updateAllAccountsFromDatabase();
+        MyAccount.accountNameReverseSortFlag = false;
+        Collections.sort(MyData.allMyAccounts, MyAccount.accountNameComparator);
         MyData.myData.updateAccountListView();
         return rootView;
     }

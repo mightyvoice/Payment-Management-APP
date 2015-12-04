@@ -13,7 +13,6 @@ public class MyPaymentItem {
     public String paidAccountName;
     public String payDate;
     public Double payAmount;
-    public boolean ifArrived = false;
     public Double totalPayAmountThisMonth;
 
     public MyPaymentItem(){}
@@ -62,7 +61,7 @@ public class MyPaymentItem {
                 }
             };
 
-    public static Boolean payAmountReverseSortFlag = false;
+    public static Boolean payAmountReverseSortFlag = true;
     public static Comparator<MyPaymentItem> payAmountComparator = new
             Comparator<MyPaymentItem>() {
                 @Override
@@ -76,15 +75,17 @@ public class MyPaymentItem {
                 }
             };
 
-    public static Boolean payDateReverseSortFlag = false;
+    public static Boolean payDateReverseSortFlag = true;
     public static Comparator<MyPaymentItem> payDateComparator = new
             Comparator<MyPaymentItem>() {
                 @Override
                 public int compare(MyPaymentItem x, MyPaymentItem y) {
                     if(payDateReverseSortFlag) {
+//                        payDateReverseSortFlag = false;
                         return -x.payDate.compareTo(y.payDate);
                     }
                     else{
+//                        payDateReverseSortFlag = true;
                         return x.payDate.compareTo(y.payDate);
                     }
                 }

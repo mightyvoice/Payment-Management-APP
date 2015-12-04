@@ -12,6 +12,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Collections;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -34,6 +36,9 @@ public class AllPaymentsListFragment extends Fragment {
         paymentListView.setAdapter(MyData.paymentListAdapter);
         paymentListView.setSelectionAfterHeaderView();
         registerPaymentListViewItemClicked();
+        MyData.myData.updateAllMyPaymentItemsFromDatabase();
+        MyPaymentItem.payDateReverseSortFlag = true;
+        Collections.sort(MyData.allMyPaymentItems, MyPaymentItem.payDateComparator);
         MyData.myData.updatePaymentListView();
 
         return rootView;

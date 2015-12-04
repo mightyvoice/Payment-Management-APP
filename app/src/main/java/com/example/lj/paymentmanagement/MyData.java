@@ -149,12 +149,10 @@ public class MyData extends SQLiteOpenHelper{
     }
 
     public void updateAccountListView(){
-//        updateAllAccountsFromDatabase();
         displayAccountList.clear();
         Double totalNeedToPay = 0.0;
         Double totalInterest = 0.0;
         for(MyAccount account: allMyAccounts){
-            displayAccountList.add(account.toString());
             if(account.toPayBalance > 0.0){
                 totalNeedToPay += account.toPayBalance;
             }
@@ -166,6 +164,9 @@ public class MyData extends SQLiteOpenHelper{
                 MyLib.roundTo2DecimalPoints(totalNeedToPay).toString() +
                 "\nTotal Interest: $" +
                 MyLib.roundTo2DecimalPoints(totalInterest).toString());
+        for(MyAccount account: allMyAccounts) {
+            displayAccountList.add(account.toString());
+        }
         accountListAdapter.notifyDataSetChanged();
     }
 
@@ -183,6 +184,15 @@ public class MyData extends SQLiteOpenHelper{
         db.close();
         updateAllAccountsFromDatabase();
         updateAccountListView();
+    }
+
+    private Integer getAccountStamentDay(String accountName){
+        for(MyAccount account: allMyAccounts){
+            if(accountName.compareToIgnoreCase(account.accountName) == 0){
+                return account.staDay;
+            }
+        }
+        return 0;
     }
 
     static public boolean ifAccountAlreadyExist(String accountName){
@@ -319,15 +329,12 @@ public class MyData extends SQLiteOpenHelper{
     }
 
     public void updatePaymentListView(){
-//        updateAllMyPaymentItemsFromDatabase();
         displayPaymentList.clear();
-        MyPaymentItem.payDateReverseSortFlag = true;
-        Collections.sort(MyData.allMyPaymentItems, MyPaymentItem.payDateComparator);
+        displayPaymentList.add("Total payment in this billing cycle is: $" +
+                getTotalPayThisBillingCycle().toString());
         for(MyPaymentItem paymentItem: allMyPaymentItems){
             displayPaymentList.add(paymentItem.toString());
         }
-        displayPaymentList.add("Total payment in this month is: $" +
-                getCurrentTotalPayThisMonth().toString());
         paymentListAdapter.notifyDataSetChanged();
     }
 
@@ -399,24 +406,28 @@ public class MyData extends SQLiteOpenHelper{
         updatePaymentListView();
     }
 
-    private Double getCurrentTotalPayThisMonth(){
-        SQLiteDatabase db = this.getWritableDatabase();
-        String query = "SELECT * FROM " + TABLE_PAYMENTS + ";";
-        Cursor cursor = db.rawQuery(query, null);
-        cursor.moveToFirst();
-        Double totalBalance = 0.0;
-        while(!cursor.isAfterLast()){
-            Integer month = Integer.parseInt(cursor.getString(
-                    cursor.getColumnIndex(COLUMN_PAY_DATE)).split("/")[1]);
+    private Double getTotalPayThisBillingCycle(){
+        Double totalPayment = 0.0;
+        for(MyPaymentItem payment: allMyPaymentItems){
+
+            int payYear = Integer.parseInt(payment.payDate.split("/")[0]);
+            int payMonth = Integer.parseInt(payment.payDate.split("/")[1]);
+            int payDay = Integer.parseInt(payment.payDate.split("/")[2]);
             Calendar c = Calendar.getInstance();
-            Integer curMonth = c.get(Calendar.MONTH)+1;
-            if(month == curMonth) {
-                totalBalance += cursor.getDouble(
-                        cursor.getColumnIndex(COLUMN_PAY_AMOUNT));
+            int curYear = c.get(Calendar.YEAR);
+            int curMonth = c.get(Calendar.MONTH)+1;
+            int curDay = c.get(Calendar.DAY_OF_MONTH);
+            if(payMonth == curMonth || payMonth == curMonth-1) {
+                String accountName = payment.payAccountName;
+                Integer staDay = getAccountStamentDay(accountName);
+                if( (payYear == curYear && curDay > staDay && curMonth == payMonth && payDay > staDay)
+                        || (payYear == curYear && curDay <= staDay && curMonth == payMonth && payDay <= staDay)
+                        || (payYear == curYear && curDay <= staDay && curMonth-1 == payMonth && payDay > staDay)
+                        || (payYear == curYear-1 && payMonth == 12 && curMonth == 1 && curDay <= staDay && payDay > staDay)) {
+                    totalPayment += payment.payAmount;
+                }
             }
-            cursor.moveToNext();
         }
-        db.close();
-        return MyLib.roundTo2DecimalPoints(totalBalance);
+        return MyLib.roundTo2DecimalPoints(totalPayment);
     }
 }
