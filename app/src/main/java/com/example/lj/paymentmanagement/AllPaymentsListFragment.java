@@ -50,14 +50,14 @@ public class AllPaymentsListFragment extends Fragment {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> parent,
                                                    View view, int position, long id) {
-                        if (position == MyData.displayPaymentList.size() - 1) {
+                        if (position == 0) {
                             Toast.makeText(getActivity(),
                                     "This item cannot be deleted or edited", Toast.LENGTH_LONG).show();
                             return true;
                         }
-                        MyData.selectPaymentItemIndex = position;
-                        MyData.selectedPaymentItem = MyData.allMyPaymentItems.get(position);
-                        MyData.editPaymentItem = MyData.allMyPaymentItems.get(position);
+                        MyData.selectPaymentItemIndex = position-1;
+                        MyData.selectedPaymentItem = MyData.allMyPaymentItems.get(position-1);
+                        MyData.editPaymentItem = MyData.allMyPaymentItems.get(position-1);
                         startActivity(new Intent(getActivity(),
                                 EditOrDeletePaymentActivity.class));
                         return true;

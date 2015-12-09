@@ -49,13 +49,13 @@ public class AllAccountsListFragment extends Fragment {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> parent,
                                                    View view, int position, long id) {
-                        if (position == MyData.allMyAccounts.size()) {
+                        if (position == 0){
                             Toast.makeText(getActivity(),
                                     "This item cannot be deleted or edited", Toast.LENGTH_LONG).show();
                             return true;
                         }
-                        MyData.selectAccountIndex = position;
-                        MyData.selectedAccount = MyData.allMyAccounts.get(position);
+                        MyData.selectAccountIndex = position-1;
+                        MyData.selectedAccount = MyData.allMyAccounts.get(position-1);
                         startActivity(new Intent(getActivity(),
                                 EditOrDeleteAccountActivity.class));
                         return true;
