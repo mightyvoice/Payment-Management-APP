@@ -318,7 +318,8 @@ public class MyData extends SQLiteOpenHelper{
                         cursor.getString(cursor.getColumnIndex(COLUMN_PAY_ACCOUNT)),
                         cursor.getString(cursor.getColumnIndex(COLUMN_PAID_ACCOUNT)),
                         cursor.getDouble(cursor.getColumnIndex(COLUMN_PAY_AMOUNT)),
-                        cursor.getString(cursor.getColumnIndex(COLUMN_PAY_DATE))
+                        MyLib.normalizeDateString(cursor.getString(cursor.getColumnIndex(COLUMN_PAY_DATE)))
+//                        cursor.getString(cursor.getColumnIndex(COLUMN_PAY_DATE))
                 );
                 allMyPaymentItems.add(tmp);
             }

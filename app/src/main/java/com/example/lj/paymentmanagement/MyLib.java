@@ -1,5 +1,7 @@
 package com.example.lj.paymentmanagement;
 
+import android.util.Log;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -89,5 +91,17 @@ public class MyLib {
             }
         }
         return ans;
+    }
+
+
+    public static String normalizeDateString(String date){
+        String[] tmp = date.split("/");
+        if(tmp.length >= 3) {
+            if (tmp[2].length() < 2) tmp[2] = "0" + tmp[2];
+            return tmp[0] + "/" + tmp[1] + "/" + tmp[2];
+        }
+        else{
+            return date;
+        }
     }
 }
