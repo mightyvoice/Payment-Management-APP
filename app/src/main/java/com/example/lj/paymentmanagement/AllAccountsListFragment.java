@@ -1,6 +1,7 @@
 package com.example.lj.paymentmanagement;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -8,10 +9,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 
 /**
@@ -19,13 +26,11 @@ import java.util.Collections;
  */
 public class AllAccountsListFragment extends Fragment {
 
-    ListView accountListView = null;
+    private ListView accountListView = null;
 
     public AllAccountsListFragment() {
         // Required empty public constructor
     }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -40,6 +45,7 @@ public class AllAccountsListFragment extends Fragment {
         MyAccount.accountNameReverseSortFlag = false;
         Collections.sort(MyData.allMyAccounts, MyAccount.accountNameComparator);
         MyData.myData.updateAccountListView();
+
         return rootView;
     }
 
@@ -62,4 +68,9 @@ public class AllAccountsListFragment extends Fragment {
                     }
                 });
     }
+
+    /**
+     * Adapter for our list of {@link GroupItem}s.
+     */
+
 }

@@ -170,6 +170,28 @@ public class MyData extends SQLiteOpenHelper{
         accountListAdapter.notifyDataSetChanged();
     }
 
+    public void updateAccountListViewVersion2(){
+        displayAccountList.clear();
+        Double totalNeedToPay = 0.0;
+        Double totalInterest = 0.0;
+        for(MyAccount account: allMyAccounts){
+            if(account.toPayBalance > 0.0){
+                totalNeedToPay += account.toPayBalance;
+            }
+            totalInterest += account.toPayInterest;
+        }
+        displayAccountList.add("Total " +
+                new Integer(allMyAccounts.size()).toString() +
+                " Accounts\nTotal Balance To Pay: $" +
+                MyLib.roundTo2DecimalPoints(totalNeedToPay).toString() +
+                "\nTotal Interest: $" +
+                MyLib.roundTo2DecimalPoints(totalInterest).toString());
+        for(MyAccount account: allMyAccounts) {
+            displayAccountList.add(account.toString());
+        }
+        accountListAdapter.notifyDataSetChanged();
+    }
+
     public void addAccountToDatabase(MyAccount myAccount){
 //        allMyAccounts.add(myAccount);
         ContentValues values = new ContentValues();
@@ -410,7 +432,6 @@ public class MyData extends SQLiteOpenHelper{
     private Double getTotalPayThisBillingCycle(){
         Double totalPayment = 0.0;
         for(MyPaymentItem payment: allMyPaymentItems){
-
             int payYear = Integer.parseInt(payment.payDate.split("/")[0]);
             int payMonth = Integer.parseInt(payment.payDate.split("/")[1]);
             int payDay = Integer.parseInt(payment.payDate.split("/")[2]);
