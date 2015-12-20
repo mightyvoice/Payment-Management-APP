@@ -90,17 +90,24 @@ public class EditOrDeletePaymentActivity extends ActionBarActivity {
 
     public void initPayAccountSpinner(){
         payAccountList.clear();
-        MyAccount.paidTimesReverseSortFlag = false;
+//        MyAccount.paidTimesReverseSortFlag = false;
         Collections.sort(MyData.allMyAccounts, MyAccount.accountNameComparator);
 //        MyAccount.paidTimesReverseSortFlag = false;
+        int selectedPaymentID = 0;
+        int i = 0;
         for(MyAccount account: MyData.allMyAccounts){
             payAccountList.add(account.accountName + " from " + account.bankName);
+            if(MyData.selectedPaymentItem.payAccountName.compareToIgnoreCase(account.accountName) == 0){
+                selectedPaymentID = i;
+            }
+            i++;
         }
         payAccountSpinnerAdapter = new ArrayAdapter<String>(
                 this, android.R.layout.simple_spinner_item, payAccountList);
         payAccountSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         editPayAccountSpinner.setAdapter(payAccountSpinnerAdapter);
         editPayAccountSpinner.setVisibility(View.VISIBLE);
+        editPayAccountSpinner.setSelection(selectedPaymentID);
         editPayAccountSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
